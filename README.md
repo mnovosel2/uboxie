@@ -4,4 +4,4 @@ Testna verzija aplikacije. Na windowsima mali problemi sa setupom. <br>
 3. s CMD-om se navigirati u root aplikacije i onda<br>
    <b>cd node_modules</b><br>
    <b>mklink /D _ ..\lib</b><br>
-4. npm start<br>
+4. povratak u root i npm start<br>
