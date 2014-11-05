@@ -1,0 +1,21 @@
+#result-list{
+	display:none;
+}
+.album-icon{
+	max-width: 50px;
+}
+.result-item-ctn{
+	min-height: 70px !important;
+	border-bottom:1px solid #D8D8D8;
+	margin-bottom: 7px !important;
+}
+#search-result-container .row{
+	background: white !important;
+}
+.song-title{
+	font-weight: bold;
+	font-size: 14px;
+}
+.song-info{
+	font-size: 12px;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "uboxie",
+  "version": "1.0.0",
+  "description": "uboxie is online/mobile based app for streaming music to group of users simultaneously using Rdio API",
+  "main": "index.js",
+  "scripts": {
+     "start": "nodemon index.js",
+     "preinstall": "nodejs bin/dependencyInstaller"
+  },
+  "keywords": [
+    "uboxie",
+    "web",
+    "mobile",
+    "Rdio"
+  ],
+  "author": "Inglorious Coders",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "~1.2.1"
+  }
+}
