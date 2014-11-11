@@ -2,6 +2,8 @@ extends ../default/layout
 block content
 	form(action='/api/1/groups/update' method='POST', id='newGroupForm')
 		.form-group
+			input(type='hidden', placeholder='Group name...', id="name" name='id' value='#{id}')
+			input(type="hidden" name="_method" value="put")
 			input.form-control(type='text', placeholder='Group name...', id="name" name='groupName')
 			input.form-control(type='text', placeholder='Rating...', id="name" name='rating')				
 			input.form-control.btn-primary(type='submit', value='Group name...', id="sbn-btn")
