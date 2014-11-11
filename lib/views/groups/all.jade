@@ -1,0 +1,8 @@
+extends ../default/layout
+block content
+	a.btn-primary(href='/groups/new')= 'New group'
+	ul
+		each item in groups
+			li
+				a(href='/groups/update/' + item._id)= item
+					a.btn-primary(href='api/1/groups/delete/' + item._id)= 'Delete'
