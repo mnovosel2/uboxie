@@ -1,0 +1,9 @@
+extends ../default/layout
+block content
+	form(action='/api/1/users/register' method='POST', id='newGroupForm')
+		.form-group
+			input.form-control(type='text', placeholder='Name...', id='name' name='name')
+			input.form-control(type='text', placeholder='Surname...', id='surname' name='surname')
+			input.form-control(type='email', placeholder='Email...', id='email' name='email')
+			input.form-control(type='password', placeholder='Password...', id='name' name='password')
+			input.form-control.btn-primary(type='submit', value='Group name...', id='sbn-btn')
