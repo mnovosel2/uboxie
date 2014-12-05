@@ -1,0 +1,17 @@
+extends ../default/layout
+block content
+	form(action='/api/1/groups/new' method='POST', id='newGroupForm')
+		.form-group
+			input.form-control(type='text', placeholder='Group name...', id="name" name='groupName')
+			input.form-control.btn-primary(type='submit', value='Create', id="sbn-btn")
+block custom-scripts
+	script.
+		$('#newGroupForm').on('submit',function(e){
+			var data=$(this).serialize();
+			e.preventDefault();
+			$.post('/api/1/groups/new',data,function(res){
+				if(res.status){
+					window.location.href="/";
+				}
+			})
+		});

@@ -1,6 +1,6 @@
 extends ../default/layout
 block content
-	.container
+	div.group-container(data-group= groupId)
 		.row
 			.search-container.col-xs-4.col-md-4
 				form(action='', method='POST', role='form', id="searchTrackForm")
@@ -11,7 +11,7 @@ block content
 			#group-queue.list-group.col-md-5
 block custom-scripts
 	script.
-		playback.instanciatePlayback("#playback");
+		App.PlaybackModule.instanciatePlayback("#playback");
 		$(document).on('keyup','#query', function(e){
 			e.preventDefault();
 			var query=$(this).val().trim();
@@ -19,22 +19,30 @@ block custom-scripts
 				$('#result-list').empty();
 			}
 			if(query.length>=3){
-				streamApi.getSearchResults(query).done(function(data){
-					streamApi.createSearchResultList(data.result,"#result-list",{
+				App.StreamApiModule.getSearchResults(query).done(function(data){
+					App.StreamApiModule.createSearchResultList(data.result,"#result-list",{
 						trackNameKey:"name",
 						artistKey:"artist",
 						iconKey:"icon",
 						albumKey:"album",
-						trackKey:"key"
+						trackKey:"key",
+						trackDuration:"duration",
+
 					});
 				});
 			}
 		});
 		$(document).on('click','.result-item',function(e){
 			e.preventDefault();
-			var trackKey=$(this).data('key'),
-				title=$(this).find('.song-title').text(),
-				info=$(this).find('.song-info').text();
-			playback.addToGroupQueue(title,info,trackKey,"#group-queue");
+			var startTime=new Date().getTime();
+			var track={
+				trackKey:$(this).data('key'),
+				title:$(this).find('.song-title').text(),
+				duration:$(this).data('duration'),
+				info:$(this).find('.song-info').text(),
+				groupId:$('.group-container').data('group'),
+				startTime:startTime
+			};
+			App.PlaybackModule.addToGroupQueue(track);
 			// playback.playTrack(trackKey);
 		})

@@ -1,0 +1,8 @@
+extends ../default/layout
+block content
+	a.btn-primary(href='/groups/new')= 'New group'
+	div.groups-ctn
+		each item in groups
+			div.item
+				h4= item.name
+				a(href='group/'+ item._id) Group details
