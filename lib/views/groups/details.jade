@@ -34,14 +34,13 @@ block custom-scripts
 		});
 		$(document).on('click','.result-item',function(e){
 			e.preventDefault();
-			var startTime=new Date().getTime();
 			var track={
 				trackKey:$(this).data('key'),
 				title:$(this).find('.song-title').text(),
 				duration:$(this).data('duration'),
 				info:$(this).find('.song-info').text(),
 				groupId:$('.group-container').data('group'),
-				startTime:startTime
+				startTime:null
 			};
 			App.PlaybackModule.addToGroupQueue(track);
 			// playback.playTrack(trackKey);

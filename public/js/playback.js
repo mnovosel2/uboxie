@@ -10,67 +10,40 @@ App.PlaybackModule = (function() {
         currentTrackFinished = false,
         currentPosition = 1,
         musicQueue = [],
-        startTime,
-        currentUserTime,
-        songOffset;
+        player;
     return {
         instanciatePlayback: function(container) {
+            player = this;
             playbackContainer = container;
             /**
              * Production playback key
              */
-            // $(container).rdio('GAlUWSac_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnVib3hpZS5tZUHg7C3eXtDx70b8NV9l9j8=');
+            // $(playbackContainer).rdio('GAlUWSac_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnVib3hpZS5tZUHg7C3eXtDx70b8NV9l9j8=');
 
 
             /**
              * Development playback key
              */
-            $(container).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
+            $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
 
-
-            $(container).bind('ready.rdio', function() {
-                $.get('/api/1/group/' + groupId + '/fetch/current', function(currentGroup) {
-                    currentUserTime = new Date().getTime();
-                    if (currentGroup.songsInGroup.length > 0) {
-                        musicQueue.length = 0;
-                        for (var i = 0; i < currentGroup.songsInGroup.length; i++) {
-                            if (currentGroup.currentSong.trackKey != null && currentGroup.songsInGroup[i].trackKey == currentGroup.currentSong.trackKey) {
-                                startTime = new Date(currentGroup.songsInGroup[i].startTime).getTime();
-                                songOffset = (currentUserTime - startTime) / 1000;
-                                if (songOffset <= currentGroup.currentSong.duration) {
-                                    $(playbackContainer).rdio().play(currentGroup.currentSong.trackKey, {
-                                        initialPosition: Math.abs(songOffset)
-                                    });
-                                }
-                                App.PlaybackModule.addListItem(QUEUE_CONTAINER, currentGroup.currentSong.trackKey, currentGroup.currentSong.title, true);
-                            }
-                            if (currentGroup.songsInGroup[i].finished == true) {
-                                App.PlaybackModule.addListItem(QUEUE_CONTAINER, currentGroup.songsInGroup[i].trackKey, currentGroup.songsInGroup[i].title, false, true);
-                            }
-                            if (currentGroup.songsInGroup[i].finished == false && currentGroup.songsInGroup[i].trackKey != currentGroup.currentSong.trackKey) {
-                                musicQueue.push(currentGroup.songsInGroup[i]);
-                                App.PlaybackModule.addListItem(QUEUE_CONTAINER, currentGroup.songsInGroup[i].trackKey, currentGroup.songsInGroup[i].title, false);
-                            }
-
-                        }
-                    }
-                });
+            $(playbackContainer).bind('ready.rdio', function() {
+                player.restoreGroupState();
             });
-            $(container).bind('playStateChanged.rdio', function(obj, state) {
+            $(playbackContainer).bind('playStateChanged.rdio', function(obj, state) {
                 stateIndicator = state;
             });
 
-            $(container).bind('playingTrackChanged.rdio', function(source, track) {
+            $(playbackContainer).bind('playingTrackChanged.rdio', function(source, track) {
                 currentSongDuration = track.duration;
                 currentTrack = track.key;
-                App.PlaybackModule.preserveSongState({
+                player.preserveSongState({
                     trackId: track.key,
                     duration: track.duration,
                     currentPlayTime: 0,
                     title: track.name
                 });
             });
-            $(container).bind('positionChanged.rdio', function(e, position) {
+            $(playbackContainer).bind('positionChanged.rdio', function(e, position) {
                 currentPosition = Math.floor(100 * position / currentSongDuration);
                 if (currentTrack && position != 0) {
                     if (currentPosition >= 99 && currentPosition <= 100) {
@@ -79,11 +52,15 @@ App.PlaybackModule = (function() {
                 }
 
             });
-            $(container).on('songFinished', function(e) {
-                var trackToPlay;
-                App.PlaybackModule.songFinished(currentTrack);
+            $(playbackContainer).on('queueShift', function(e, trackKey) {
+                player.updateSongStartTime(trackKey);
+            });
+            $(playbackContainer).on('songFinished', function(e) {
+                var trackToPlay = null;
+                player.songFinished(currentTrack);
                 if (musicQueue.length > 0) {
                     trackToPlay = musicQueue.shift();
+                    $(playbackContainer).trigger('queueShift', trackToPlay.trackKey);
                 } else {
                     trackToPlay = null;
                     $(QUEUE_CONTAINER).find('.active').removeClass('active');
@@ -102,10 +79,45 @@ App.PlaybackModule = (function() {
                 console.log(data);
             });
         },
-        updateCurrentPlayTime: function(trackKey, currentPlayTime) {
+        restoreGroupState: function() {
+            $.get('/api/1/group/' + groupId + '/fetch/current', function(currentGroup) {
+                var currentUserTime = new Date().getTime(),
+                    songsInGroup = currentGroup.songsInGroup,
+                    startTime,
+                    songOffset,
+                    currentSong = currentGroup.currentSong;
+                if (songsInGroup.length > 0) {
+                    musicQueue.length = 0;
+                    for (var i = 0; i < songsInGroup.length; i++) {
+                        if (songsInGroup[i].finished == true) {
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[i].trackKey, songsInGroup[i].title, false);
+                        }
+                    }
+                    for (var j = 0; j < songsInGroup.length; j++) {
+                        if (currentSong.trackKey != null && songsInGroup[j].trackKey == currentSong.trackKey) {
+                            startTime = new Date(songsInGroup[j].startTime).getTime();
+                            songOffset = (currentUserTime - startTime) / 1000;
+                            if (songOffset <= currentSong.duration) {
+                                $(playbackContainer).rdio().play(currentSong.trackKey, {
+                                    initialPosition: Math.abs(songOffset)
+                                });
+                            }
+                            player.addListItem(QUEUE_CONTAINER, currentSong.trackKey, currentSong.title, true);
+                        }
+                        if (songsInGroup[j].finished == false && songsInGroup[j].trackKey != currentSong.trackKey) {
+                            musicQueue.push(songsInGroup[j]);
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[j].trackKey, songsInGroup[j].title, false);
+                        }
+
+                    }
+                }
+            });
+        },
+        updateSongStartTime: function(trackKey) {
+            var startTime = new Date().getTime();
             $.put('/api/1/group/' + groupId + '/state/playtime', {
                 trackId: trackKey,
-                currentPlayTime: currentPlayTime
+                startTime: startTime
             }, function(data) {
                 console.log(data);
             });
@@ -120,19 +132,21 @@ App.PlaybackModule = (function() {
                 title: track.title,
                 duration: track.duration,
                 info: track.info,
-                offset: track.offset || 0
+                startTime: track.startTime
             });
-            App.PlaybackModule.addListItem(QUEUE_CONTAINER, track.trackKey, track.title, false);
-            if (stateIndicator != 1) {
-                trackToPlay = musicQueue.shift();
-                $(playbackContainer).rdio().play(trackToPlay.trackKey, {
-                    initialPosition: parseInt(trackToPlay.offset, 10)
-                });
-                $(QUEUE_CONTAINER).find('#' + trackToPlay.trackKey).addClass('active');
-            }
+            player.addListItem(QUEUE_CONTAINER, track.trackKey, track.title, false);
             $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
-                console.log(data);
+                if (data.status) {
+                    if (stateIndicator != 1) {
+                        trackToPlay = musicQueue.shift();
+                        $(playbackContainer).trigger('queueShift', trackToPlay.trackKey);
+                        $(playbackContainer).rdio().play(trackToPlay.trackKey);
+                        $(QUEUE_CONTAINER).find('#' + trackToPlay.trackKey).addClass('active');
+                    }
+                }
             });
+
+
         },
         songFinished: function(trackKey) {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
