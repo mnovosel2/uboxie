@@ -1,11 +1,15 @@
 doctype html
 html
-  head
-    title Uboxie
-    link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css")
-    link(rel='stylesheet', href='/css/style.css')
-  body
-    div.container
-      block content
-    include ../includes/scripts
-    block custom-scripts
+	head
+		title Uboxie
+		link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css")
+		link(rel="stylesheet", href="/css/material-wfont.min.css")
+		link(rel="stylesheet", href="/css/material.min.css")
+		link(rel="stylesheet", href="/css/ripples.min.css")
+		link(rel="stylesheet", href="")
+		link(rel='stylesheet', href='/css/style.css')
+	body
+		div.container
+			block content
+	include ../includes/scripts
+	block custom-scripts

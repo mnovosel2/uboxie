@@ -9,9 +9,6 @@
 	border-bottom:1px solid #D8D8D8;
 	margin-bottom: 7px !important;
 }
-#search-result-container .row{
-	background: white !important;
-}
 .song-title{
 	font-weight: bold;
 	font-size: 14px;
@@ -19,3 +16,4 @@
 .song-info{
 	font-size: 12px;
 }
+.item-in-group { width: 25%; }

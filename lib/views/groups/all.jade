@@ -3,6 +3,14 @@ block content
 	a.btn-primary(href='/groups/new')= 'New group'
 	div.groups-ctn
 		each item in groups
-			div.item
-				h4= item.name
-				a(href='group/'+ item._id) Group details
+			div.group-container
+				div.item-in-group
+					h4= item.name
+					a(href='group/'+ item._id) Group details
+block custom-scripts
+	script.
+		var $container = $('.group-container');
+		$container.masonry({
+		  columnWidth: 200,
+		  itemSelector: '.item-in-group'
+		});

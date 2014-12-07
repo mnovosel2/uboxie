@@ -37,10 +37,7 @@ App.PlaybackModule = (function() {
                 currentSongDuration = track.duration;
                 currentTrack = track.key;
                 player.preserveSongState({
-                    trackId: track.key,
-                    duration: track.duration,
-                    currentPlayTime: 0,
-                    title: track.name
+                    trackId: track.key
                 });
             });
             $(playbackContainer).bind('positionChanged.rdio', function(e, position) {
@@ -74,7 +71,6 @@ App.PlaybackModule = (function() {
             });
         },
         preserveSongState: function(trackInfo) {
-            trackInfo.groupId = groupId;
             $.post('/api/1/group/' + groupId + '/state/current', trackInfo, function(data) {
                 console.log(data);
             });
@@ -97,6 +93,8 @@ App.PlaybackModule = (function() {
                         if (currentSong.trackKey != null && songsInGroup[j].trackKey == currentSong.trackKey) {
                             startTime = new Date(songsInGroup[j].startTime).getTime();
                             songOffset = (currentUserTime - startTime) / 1000;
+                            console.log('Offset');
+                            console.log(songOffset);
                             if (songOffset <= currentSong.duration) {
                                 $(playbackContainer).rdio().play(currentSong.trackKey, {
                                     initialPosition: Math.abs(songOffset)
