@@ -1,4 +1,4 @@
-App.PlaybackModule = (function() {
+Uboxie.PlaybackModule = (function() {
     //Private vars
     var playbackContainer = null,
         QUEUE_CONTAINER = "#group-queue",
@@ -18,13 +18,13 @@ App.PlaybackModule = (function() {
             /**
              * Production playback key
              */
-            $(playbackContainer).rdio('GAlUWSac_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnVib3hpZS5tZUHg7C3eXtDx70b8NV9l9j8=');
+            // $(playbackContainer).rdio('GAlUWSac_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnVib3hpZS5tZUHg7C3eXtDx70b8NV9l9j8=');
 
 
             /**
              * Development playback key
              */
-            // $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
+            $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
 
             $(playbackContainer).bind('ready.rdio', function() {
                 player.restoreGroupState();
@@ -35,6 +35,7 @@ App.PlaybackModule = (function() {
 
             $(playbackContainer).bind('playingTrackChanged.rdio', function(source, track) {
                 currentSongDuration = track.duration;
+                player.displaySongEnd('.player-song-end');
                 currentTrack = track.key;
                 player.preserveSongState({
                     trackId: track.key
@@ -42,6 +43,8 @@ App.PlaybackModule = (function() {
             });
             $(playbackContainer).bind('positionChanged.rdio', function(e, position) {
                 currentPosition = Math.floor(100 * position / currentSongDuration);
+                $('.player-progress-bar').css('width', currentPosition + '%');
+                player.displaySongDuration('.player-song-start', position);
                 if (currentTrack && position != 0) {
                     if (currentPosition >= 99 && currentPosition <= 100) {
                         $(this).trigger('songFinished');
@@ -58,6 +61,7 @@ App.PlaybackModule = (function() {
                 if (musicQueue.length > 0) {
                     trackToPlay = musicQueue.shift();
                     $(playbackContainer).trigger('queueShift', trackToPlay.trackKey);
+
                 } else {
                     trackToPlay = null;
                     $(QUEUE_CONTAINER).find('.active').removeClass('active');
@@ -86,7 +90,7 @@ App.PlaybackModule = (function() {
                     musicQueue.length = 0;
                     for (var i = 0; i < songsInGroup.length; i++) {
                         if (songsInGroup[i].finished == true) {
-                            player.addListItem(QUEUE_CONTAINER, songsInGroup[i].trackKey, songsInGroup[i].title, false);
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[i].trackKey, songsInGroup[i].name, false);
                         }
                     }
                     for (var j = 0; j < songsInGroup.length; j++) {
@@ -100,11 +104,11 @@ App.PlaybackModule = (function() {
                                     initialPosition: Math.abs(songOffset)
                                 });
                             }
-                            player.addListItem(QUEUE_CONTAINER, currentSong.trackKey, currentSong.title, true);
+                            player.addListItem(QUEUE_CONTAINER, currentSong.trackKey, currentSong.name, true);
                         }
                         if (songsInGroup[j].finished == false && songsInGroup[j].trackKey != currentSong.trackKey) {
                             musicQueue.push(songsInGroup[j]);
-                            player.addListItem(QUEUE_CONTAINER, songsInGroup[j].trackKey, songsInGroup[j].title, false);
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[j].trackKey, songsInGroup[j].name, false);
                         }
 
                     }
@@ -121,18 +125,18 @@ App.PlaybackModule = (function() {
             });
         },
         addToGroupQueue: function(track, container, addToQueue) {
-            var listItem = '<a href="#" class="list-group-item" id="' + track.trackKey + '">' + track.title + '</a>',
+            var listItem = '<a href="#" class="list-group-item" id="' + track.trackKey + '">' + track.name + '</a>',
                 childrenLength = 0,
                 trackToPlay;
 
             musicQueue.push({
                 trackKey: track.trackKey,
-                title: track.title,
+                name: track.name,
                 duration: track.duration,
                 info: track.info,
                 startTime: track.startTime
             });
-            player.addListItem(QUEUE_CONTAINER, track.trackKey, track.title, false);
+            player.addListItem(QUEUE_CONTAINER, track.trackKey, track.name, false);
             $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
                 if (data.status) {
                     if (stateIndicator != 1) {
@@ -149,12 +153,12 @@ App.PlaybackModule = (function() {
                 trackKey: trackKey
             }, function(data) {});
         },
-        addListItem: function(container, trackKey, title, active, prepend) {
+        addListItem: function(container, trackKey, name, active, prepend) {
             var listItem = "";
             if (active) {
-                listItem = '<a href="#" class="list-group-item active" id="' + trackKey + '">' + title + '</a>';
+                listItem = '<a href="#" class="list-group-item active" id="' + trackKey + '">' + name + '</a>';
             } else {
-                listItem = '<a href="#" class="list-group-item" id="' + trackKey + '">' + title + '</a>';
+                listItem = '<a href="#" class="list-group-item" id="' + trackKey + '">' + name + '</a>';
             }
             if (prepend) {
                 $(container).prepend(listItem);
@@ -162,6 +166,28 @@ App.PlaybackModule = (function() {
                 $(container).append(listItem);
             }
 
+        },
+        displaySongEnd: function(container) {
+            var minutes = Math.floor(currentSongDuration / 60),
+                balanceOfSeconds = currentSongDuration % 60;
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            if (balanceOfSeconds < 10) {
+                balanceOfSeconds = '0' + balanceOfSeconds;
+            }
+            $(container).text(minutes + ':' + balanceOfSeconds);
+        },
+        displaySongDuration: function(container, position) {
+            var minutes = Math.floor(position / 60),
+                balanceOfSeconds = Math.floor(position % 60);
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            if (balanceOfSeconds < 10) {
+                balanceOfSeconds = '0' + balanceOfSeconds;
+            }
+            $(container).text(minutes + ':' + balanceOfSeconds);
         }
     };
 })();

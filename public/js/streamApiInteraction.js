@@ -1,4 +1,4 @@
-App.StreamApiModule = (function() {
+Uboxie.StreamApiModule = (function() {
     return {
         getSearchResults: function(query) {
             return $.post('/api/1/getTracks', {

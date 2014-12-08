@@ -1,17 +1,19 @@
 extends ../default/layout
 block content
-	div.group-container(data-group= groupId)
-		.row
-			.search-container.col-xs-4.col-md-4
-				form(action='', method='POST', role='form', id="searchTrackForm")
-					.form-group
-						input.form-control(type='text', placeholder='Find song', id="query")
-				#result-list
-			#playback
-			#group-queue.list-group.col-md-5
+	div.container
+		div.group-container(data-group= groupId)
+			.row
+				.search-container.col-xs-4.col-md-4
+					form(action='', method='POST', role='form', id="searchTrackForm")
+						.form-group
+							input.form-control(type='text', placeholder='Find song', id="query")
+					#result-list
+				#playback
+				#group-queue.list-group.col-md-5
+	include ../includes/player
 block custom-scripts
 	script.
-		App.PlaybackModule.instanciatePlayback("#playback");
+		Uboxie.PlaybackModule.instanciatePlayback("#playback");
 		$(document).on('keyup','#query', function(e){
 			e.preventDefault();
 			var query=$(this).val().trim();
@@ -19,8 +21,8 @@ block custom-scripts
 				$('#result-list').empty();
 			}
 			if(query.length>=3){
-				App.StreamApiModule.getSearchResults(query).done(function(data){
-					App.StreamApiModule.createSearchResultList(data.result,"#result-list",{
+				Uboxie.StreamApiModule.getSearchResults(query).done(function(data){
+					Uboxie.StreamApiModule.createSearchResultList(data.result,"#result-list",{
 						trackNameKey:"name",
 						artistKey:"artist",
 						iconKey:"icon",
@@ -36,12 +38,12 @@ block custom-scripts
 			e.preventDefault();
 			var track={
 				trackKey:$(this).data('key'),
-				title:$(this).find('.song-title').text(),
+				name:$(this).find('.song-title').text(),
 				duration:$(this).data('duration'),
 				info:$(this).find('.song-info').text(),
 				groupId:$('.group-container').data('group'),
 				startTime:null
 			};
-			App.PlaybackModule.addToGroupQueue(track);
+			Uboxie.PlaybackModule.addToGroupQueue(track);
 			// playback.playTrack(trackKey);
 		})

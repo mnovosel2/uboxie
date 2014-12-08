@@ -1,19 +1,74 @@
-#result-list{
-	display:none;
+#result-list {
+    display: none;
 }
-.album-icon{
-	max-width: 50px;
+.album-icon {
+    max-width: 50px;
 }
-.result-item-ctn{
-	min-height: 70px !important;
-	border-bottom:1px solid #D8D8D8;
-	margin-bottom: 7px !important;
+.result-item-ctn {
+    min-height: 70px !important;
+    border-bottom: 1px solid #D8D8D8;
+    margin-bottom: 7px !important;
 }
-.song-title{
-	font-weight: bold;
-	font-size: 14px;
+.song-title {
+    font-weight: bold;
+    font-size: 14px;
 }
-.song-info{
-	font-size: 12px;
+.song-info {
+    font-size: 12px;
 }
-.item-in-group { width: 25%; }
+.item-in-group {
+    width: 25%;
+}
+.player-container {
+    width: 100%;
+    height: 100px;
+    background: #3f51b5;
+    /* Old browsers */
+    
+    background: -moz-linear-gradient(top, #3f51b5 42%, #5a6bc8 100%);
+    /* FF3.6+ */
+    
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(42%, #3f51b5), color-stop(100%, #5a6bc8));
+    /* Chrome,Safari4+ */
+    
+    background: -webkit-linear-gradient(top, #3f51b5 42%, #5a6bc8 100%);
+    /* Chrome10+,Safari5.1+ */
+    
+    background: -o-linear-gradient(top, #3f51b5 42%, #5a6bc8 100%);
+    /* Opera 11.10+ */
+    
+    background: -ms-linear-gradient(top, #3f51b5 42%, #5a6bc8 100%);
+    /* IE10+ */
+    
+    background: linear-gradient(to bottom, #3f51b5 42%, #5a6bc8 100%);
+    /* W3C */
+    
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#3f51b5', endColorstr='#5a6bc8', GradientType=0);
+    /* IE6-9 */
+    
+    position: absolute;
+    bottom: 0;
+    margin: 0 !important;
+}
+.progress-bar-ctn {
+    position: relative;
+    top: 45px;
+    width: 40%;
+    left: 30%;
+}
+.player-song-start,.player-song-end{
+	color:#fbfbfb;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.player-song-end{
+	float:right;
+}
+.progress.player-progress {
+    height: 2px !important;
+    width: 100%;
+    background: #a0a0a0 !important;
+}
+.progress-bar.player-progress-bar {
+    background-color: #fbfbfb !important;
+}

@@ -1,5 +1,5 @@
 //initialize app namespace
-var App={};
+var Uboxie={};
 
 //extend jQuery with put and delete
 function _ajax_request(url, data, callback, type, method) {
