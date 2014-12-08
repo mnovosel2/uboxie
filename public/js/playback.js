@@ -18,7 +18,7 @@ Uboxie.PlaybackModule = (function() {
             /**
              * Production playback key
              */
-            $(playbackContainer).rdio('GAlUWSac_____2R2cHlzNHd5ZXg3Z2M0OXdoaDY3aHdrbnVib3hpZS5tZUHg7C3eXtDx70b8NV9l9j8=');
+            $(playbackContainer).rdio('GAlUha0N_____3BiNTRiMmFud2N3dGMycG1naDM1YWdxZXVib3hpZS5tZeQZemKsAiQFgvsEycOdv_Q=');
 
 
             /**
