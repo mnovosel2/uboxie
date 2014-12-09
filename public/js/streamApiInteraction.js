@@ -18,7 +18,7 @@ Uboxie.StreamApiModule = (function() {
                 contentToDisplay += '<div class="col-xs-7 col-md-7 section-box">';
 
                 contentToDisplay += '<h5 class="song-title">' + element[options.trackNameKey] + '</h5>';
-                contentToDisplay += '<p class="song-info"><b>' + element[options.artistKey] + "</b> " + (element[options.albumKey] || "") + '</p>';
+                contentToDisplay += '<p class="song-info"><b class="song-author">' + element[options.artistKey] + "</b> " + (element[options.albumKey] || "") + '</p>';
                 contentToDisplay += '</div></a></div>';
             });
             contentToDisplay += '</div></div>';

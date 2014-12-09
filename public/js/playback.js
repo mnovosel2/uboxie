@@ -18,13 +18,13 @@ Uboxie.PlaybackModule = (function() {
             /**
              * Production playback key
              */
-            $(playbackContainer).rdio('GAlUha0N_____3BiNTRiMmFud2N3dGMycG1naDM1YWdxZXVib3hpZS5tZeQZemKsAiQFgvsEycOdv_Q=');
+            // $(playbackContainer).rdio('GAlUha0N_____3BiNTRiMmFud2N3dGMycG1naDM1YWdxZXVib3hpZS5tZeQZemKsAiQFgvsEycOdv_Q=');
 
 
             /**
              * Development playback key
              */
-            // $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
+            $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
 
             $(playbackContainer).bind('ready.rdio', function() {
                 player.restoreGroupState();
@@ -43,7 +43,9 @@ Uboxie.PlaybackModule = (function() {
             });
             $(playbackContainer).bind('positionChanged.rdio', function(e, position) {
                 currentPosition = Math.floor(100 * position / currentSongDuration);
-                $('.player-progress-bar').css('width', currentPosition + '%');
+                if(currentPosition>0){
+                    $('.player-progress-bar').css('width', currentPosition + '%');
+                }
                 player.displaySongDuration('.player-song-start', position);
                 if (currentTrack && position != 0) {
                     if (currentPosition >= 99 && currentPosition <= 100) {
@@ -129,13 +131,7 @@ Uboxie.PlaybackModule = (function() {
                 childrenLength = 0,
                 trackToPlay;
 
-            musicQueue.push({
-                trackKey: track.trackKey,
-                name: track.name,
-                duration: track.duration,
-                info: track.info,
-                startTime: track.startTime
-            });
+            musicQueue.push(track);
             player.addListItem(QUEUE_CONTAINER, track.trackKey, track.name, false);
             $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
                 if (data.status) {
