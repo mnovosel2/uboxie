@@ -18,13 +18,13 @@ Uboxie.PlaybackModule = (function() {
             /**
              * Production playback key
              */
-            $(playbackContainer).rdio('GAlUha0N_____3BiNTRiMmFud2N3dGMycG1naDM1YWdxZXVib3hpZS5tZeQZemKsAiQFgvsEycOdv_Q=');
+            // $(playbackContainer).rdio('GAlUha0N_____3BiNTRiMmFud2N3dGMycG1naDM1YWdxZXVib3hpZS5tZeQZemKsAiQFgvsEycOdv_Q=');
 
 
             /**
              * Development playback key
              */
-            // $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
+            $(playbackContainer).rdio('GAlNi78J_____zlyYWs5ZG02N2pkaHlhcWsyOWJtYjkyN2xvY2FsaG9zdEbwl7EHvbylWSWFWYMZwfc=');
 
             $(playbackContainer).bind('ready.rdio', function() {
                 player.restoreGroupState();
