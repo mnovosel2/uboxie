@@ -9,6 +9,7 @@ block content
 							input.form-control(type='text', placeholder='Find song', id="query")
 					#result-list
 				#playback
+				#dz-root
 				#group-queue.list-group.col-md-5
 	include ../includes/player
 block custom-scripts
@@ -38,7 +39,7 @@ block custom-scripts
 			e.preventDefault();
 			var self=$(this),
 				track={
-					trackKey:self.data('key'),
+					key:self.data('key'),
 					name:self.find('.song-title').text(),
 					duration:self.data('duration'),
 					info:self.find('.song-info').text(),
