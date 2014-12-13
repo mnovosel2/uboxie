@@ -17,7 +17,7 @@ Uboxie.PlaybackModule = (function() {
             playbackContainer = container;
             DZ.init({
                 appId: '148831',
-                channelUrl: 'http://localhost/channel',
+                channelUrl: 'http://uboxie.me/channel',
                 player: {
                     onload: function() {
                         player.restoreGroupState();
