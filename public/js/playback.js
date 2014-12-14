@@ -16,6 +16,13 @@ Uboxie.PlaybackModule = (function() {
             player = this;
             playbackContainer = container;
             DZ.init({
+                /**
+                 * Developer key
+                 */
+                 // appId:'148981',
+                /**
+                 * Deployment key
+                 */
                 appId: '148831',
                 channelUrl: 'http://uboxie.me/channel',
                 player: {
@@ -144,9 +151,9 @@ Uboxie.PlaybackModule = (function() {
         addListItem: function(container, trackKey, name, active, prepend) {
             var listItem = "";
             if (active) {
-                listItem = '<a href="#" class="list-group-item active" id="' + trackKey + '">' + name + '</a>';
+                listItem = '<a href="#" class="list-group-item queue-item active" id="' + trackKey + '">' + name + '</a>';
             } else {
-                listItem = '<a href="#" class="list-group-item" id="' + trackKey + '">' + name + '</a>';
+                listItem = '<a href="#" class="list-group-item queue-item" id="' + trackKey + '">' + name + '</a>';
             }
             if (prepend) {
                 $(container).prepend(listItem);

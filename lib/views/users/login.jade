@@ -1,3 +1,10 @@
 extends ../default/layout
 block content
-	a.btn.btn-success(href="#{authLink}") Login with Deezer
+	.login-msg
+		h1 Will you be so kind and connect with your
+			br 
+			span.login-deezer Deezer 
+			span account?
+		span.register-deezer If you don't have an account, you can create one for FREE
+		br
+		a.btn.btn-success.deezer-btn(href="#{authLink}") Connect with Deezer

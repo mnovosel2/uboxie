@@ -1,16 +1,17 @@
 extends ../default/layout
 block content
 	div.container
-		div.group-container(data-group= groupId)
+		div.group-container(data-group= groupId).col-lg-12.col-md-12
 			.row
-				.search-container.col-xs-4.col-md-4
+				.search-container.col-xs-5.col-md-5.col-lg-5
 					form(action='', method='POST', role='form', id="searchTrackForm")
 						.form-group
-							input.form-control(type='text', placeholder='Find song', id="query")
+							input.form-control(type='text', placeholder='Type song or artist', id="query")
 					#result-list
 				#playback
 				#dz-root
-				#group-queue.list-group.col-md-5
+				.col-md-1.col-lg-1
+				#group-queue.list-group.col-md-6.col-lg-6
 	include ../includes/player
 block custom-scripts
 	script.
@@ -23,15 +24,19 @@ block custom-scripts
 			}
 			if(query.length>=3){
 				Uboxie.StreamApiModule.getSearchResults(query).done(function(data){
-					Uboxie.StreamApiModule.createSearchResultList(data.result,"#result-list",{
-						trackNameKey:"name",
-						artistKey:"artist",
-						iconKey:"icon",
-						albumKey:"album",
-						trackKey:"key",
-						trackDuration:"duration",
+					if(data.status){
+						Uboxie.StreamApiModule.createSearchResultList(data.result,"#result-list",{
+							trackNameKey:"name",
+							artistKey:"artist",
+							iconKey:"icon",
+							albumKey:"info",
+							trackKey:"key",
+							trackDuration:"duration",
 
-					});
+						});
+					}else{
+						alert("Error while handling request. Please log in again.");
+					}
 				});
 			}
 		});
@@ -42,12 +47,19 @@ block custom-scripts
 					key:self.data('key'),
 					name:self.find('.song-title').text(),
 					duration:self.data('duration'),
-					info:self.find('.song-info').text(),
+					info:self.find('.album-info').text(),
 					groupId:$('.group-container').data('group'),
 					startTime:null,
 					icon:self.find('.album-icon').attr('src'),
 					artist:self.find('.song-author').text()
 				};
 			Uboxie.PlaybackModule.addToGroupQueue(track);
-			// playback.playTrack(trackKey);
 		})
+		window.onbeforeunload=function(e){
+			 var message = "This page is asking you to confirm that you want to leave - data you have entered may not be saved.",
+			  e = e || window.event;
+			  if (e) {
+			    e.returnValue = message;
+			  }
+			  return message;
+		}

@@ -1,5 +1,66 @@
+body {
+    background-color: #fafafa !important;
+}
+.nav-transp {
+    width: 100%;
+    height: 80px;
+    background: -moz-linear-gradient(top, rgba(249, 249, 249, 1) 0%, rgba(255, 255, 255, 0.96) 100%);
+    /* FF3.6+ */
+    
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(249, 249, 249, 1)), color-stop(100%, rgba(255, 255, 255, 0.96)));
+    /* Chrome,Safari4+ */
+    
+    background: -webkit-linear-gradient(top, rgba(249, 249, 249, 1) 0%, rgba(255, 255, 255, 0.96) 100%);
+    /* Chrome10+,Safari5.1+ */
+    
+    background: -o-linear-gradient(top, rgba(249, 249, 249, 1) 0%, rgba(255, 255, 255, 0.96) 100%);
+    /* Opera 11.10+ */
+    
+    background: -ms-linear-gradient(top, rgba(249, 249, 249, 1) 0%, rgba(255, 255, 255, 0.96) 100%);
+    /* IE10+ */
+    
+    background: linear-gradient(to bottom, rgba(249, 249, 249, 1) 0%, rgba(255, 255, 255, 0.96) 100%);
+    /* W3C */
+    
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f5ffffff', GradientType=0);
+    /* IE6-9 */
+    
+    opacity: .8;
+    position: fixed;
+    z-index: 150;
+    border-bottom: 1px solid #e8eaf6;
+}
 #result-list {
     display: none;
+}
+.group-container{
+    margin-top: 25px !important;
+
+}
+.group-container #group-queue{
+      background-color: white;
+      padding:15px;
+          -webkit-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
+    -moz-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
+    box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
+}
+.group-container #group-queue .queue-item{
+    line-height: 1.5em;
+    color:#BDBDBD;
+    font-size: 16px;
+    border-bottom: 1px solid #eeeeee;
+    padding: 9px;
+}
+.group-container #group-queue .queue-item:last-child{
+     border-bottom: none;
+}
+
+.group-container #group-queue .queue-item.active{
+    color:white;
+    background-color: #303F9F;
+}
+#group-queue  .list-group-item.active:hover, #group-queue .list-group-item.active:focus{
+    outline:0px solid rgba(0, 0, 0, 0) !important;
 }
 .album-icon {
     max-width: 50px;
@@ -17,7 +78,167 @@
     font-size: 12px;
 }
 .item-in-group {
-    width: 25%;
+    overflow: hidden;
+    background-color: #ffffff;
+    padding: 4%;
+    -webkit-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.22);
+    -moz-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.22);
+    box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.22);
+    margin: 10px 0;
+    height: 100%;
+}
+.add-group-ctn, .search-group-ctn {
+    margin-top: 10px;
+}
+.add-group-ctn a {
+    float: right;
+    z-index: 200;
+}
+.btn {
+    padding: 8px 20px !important;
+}
+.add-group-ctn .btn {
+    background-color: #00897b !important;
+}
+.search-group-ctn {
+    width: 20%;
+    display: inline-block;
+    z-index: 200;
+    float: right;
+    margin-right: 20px;
+    margin-top: 17px;
+}
+.search-group-ctn input {
+    z-index: 200;
+}
+.groups-ctn {
+    margin-top: 100px;
+}
+.group-menu {
+    margin-top: 98px;
+    position: fixed;
+}
+.group-menu .list-group-item {
+    font-size: 15px !important;
+    line-height: 1.8em;
+    text-transform: uppercase;
+}
+.group-menu .list-group-item a {
+    text-decoration: none;
+    color: #9FA8DA;
+}
+.group-menu .list-group-item a:hover {
+    color: #283593;
+}
+.group-menu .list-header {
+    color: #a9a9a9;
+    text-transform: uppercase;
+}
+.listeners-ctn {
+    width: 60%;
+    float: left;
+}
+.listeners {
+    text-transform: uppercase;
+    font-size: 1.4em;
+    display: inline-block;
+    margin: 0 5px;
+}
+.owner-info {
+    float: left;
+    overflow: hidden;
+    width: 50%;
+    margin-left: 20px;
+}
+.owner-basic {
+    float: right;
+    width: 70%;
+}
+.owner-name {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+.owner-desc {
+    width: 100%;
+    display: inline-block;
+    text-transform: uppercase;
+    color: #bcbcbc;
+    font-size: 14px;
+}
+.owner-avatar {
+    max-width: 25% !important;
+    height: auto;
+    float: left;
+}
+.listeners-ctn {
+    margin: 12px 0 4px 15px;
+    width: 50%;
+}
+.icon-group-btn span, .icon-group-add-btn span {
+    font-family: RobotoDraft, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif !important;
+    font-size: 14px !important;
+    display: inline-block;
+    padding-left: 5px;
+    text-transform: uppercase;
+}
+.listeners-desc {
+    font-size: 1em;
+    color: #bcbcbc;
+}
+.group-details-ctn {
+    float: left;
+}
+.group-details-ctn .btn {
+    margin: 0 0 0 20px !important;
+    background-color: #3f51b5 !important;
+}
+.group-name {
+    text-transform: uppercase;
+    color: #a9a9a9;
+    font-size: 22px;
+    display: inline-block;
+    margin-right: 5px;
+}
+.group-owner {
+    font-size: 16px;
+    color: #c0c0bf;
+}
+.group-main-info {
+    border-bottom: 1px solid #e8eaf6;
+    margin-bottom: 13px;
+}
+.group-image-ctn {
+    position: relative;
+}
+.group-image {
+    float: left;
+    max-width: 100%;
+    vertical-align: top;
+}
+.login-msg{
+    width: 35%;
+    text-align: center;
+    position: relative;
+    left:32%;
+    margin-top:10%;
+}
+.login-msg .login-deezer{
+    color:#5C6BC0;
+}
+.login-msg .register-deezer{
+    font-size: 12px;
+   color:#a9a9a9;
+   display: inline-block;
+}
+.login-msg .deezer-btn{
+    display: inline-block;
+    margin-top: 25px;
+    background-color: #00897b !important;
+}
+.login-msg h1{
+    text-transform: uppercase;
+    color:#a9a9a9;
+    line-height: 1.2em;
 }
 .player-container {
     width: 100%;
@@ -56,13 +277,13 @@
     width: 40%;
     left: 30%;
 }
-.player-song-start,.player-song-end{
-	color:#fbfbfb;
-	display: inline-block;
-	margin-bottom: 5px;
+.player-song-start, .player-song-end {
+    color: #fbfbfb;
+    display: inline-block;
+    margin-bottom: 5px;
 }
-.player-song-end{
-	float:right;
+.player-song-end {
+    float: right;
 }
 .progress.player-progress {
     height: 2px !important;
@@ -71,4 +292,40 @@
 }
 .progress-bar.player-progress-bar {
     background-color: #fbfbfb !important;
+}
+@media(min-width:992px) and (max-width: 1170px){
+    .group-image {
+        max-width: 50%;
+    }
+    .owner-info {
+        float: left;
+        margin-left: 20px;
+        overflow: hidden;
+        width: 40%;
+    }
+    .owner-basic {
+        float: right;
+        width: 70%;
+    }
+    .owner-desc {
+        display: inline;
+        padding-right: 4px;
+    }
+    .owner-avatar {
+        margin-top: 7px;
+    }
+    .listeners-ctn {
+        margin: 12px 0 4px 15px;
+        width: 40%;
+    }
+    .group-details-ctn {
+        float: right;
+    }
+    .group-details-ctn .btn {
+        background-color: #3f51b5 !important;
+        float: right !important;
+        margin: 0 0 0 10px !important;
+        padding: 8px 10px !important;
+        width: 125px;
+    }
 }

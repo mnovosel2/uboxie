@@ -1,16 +1,52 @@
 extends ../default/layout
 block content
-	a.btn-primary(href='/groups/new')= 'New group'
-	div.groups-ctn
-		each item in groups
-			div.group-container
-				div.item-in-group
-					h4= item.name
-					a(href='group/'+ item._id) Group details
+	include ../includes/nav-transp
+	.container
+		.row
+			.group.col-lg-12.col-lg-md-12
+				.group-menu
+					h4.list-header Groups
+					ul.list-group
+						li.list-group-item
+							a.active(href="#") All
+						li.list-group-item 
+							a(href="#") Latest
+						li.list-group-item
+							a(href="#") Your groups
+						li.list-group-item
+							a(href="#") Trending
+						li.list-group-item
+							a(href="#") Top rated
+				.col-lg-2.col-md-2
+				.groups-ctn.col-lg-10.col-md-10
+					each item in groups
+						.col-lg-5.col-md-5
+							div.item-in-group
+								.group-main-info
+									h4.group-name= item.name 
+								.group-image-ctn
+									img.img-responsive.group-image(src= item.currentSong.icon || "/img/default-icon.jpg" alt="Group cover image")
+									.image-overlay
+								.owner-info
+									.owner-basic
+										span.owner-desc Created by
+										span.owner-name= item.owner
+									.owner-avatar
+										img.img-responsive.img-circle(src="https://api.deezer.com/album/299519/image" alt="Avatar")
+								.group-info
+									.listeners-ctn
+										span.listeners 1 
+										span.listeners-desc listener(s)
+									.group-details-ctn
+										a.btn.btn-primary(href='group/'+ item._id) 
+											.icon-preview
+												i.mdi-av-play-circle-outline.icon-group-btn
+													span JOIN GROUP									
 block custom-scripts
 	script.
 		var $container = $('.group-container');
-		$container.masonry({
-		  columnWidth: 200,
-		  itemSelector: '.item-in-group'
-		});
+
+		// $container.masonry({
+		//   columnWidth: 200,
+		//   itemSelector: '.item-in-group'
+		// });

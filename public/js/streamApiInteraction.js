@@ -2,7 +2,8 @@ Uboxie.StreamApiModule = (function() {
     return {
         getSearchResults: function(query) {
             return $.post('/api/1/getTracks', {
-                query: query
+                query: query,
+                limit:5
             });
         },
         createSearchResultList: function(data, container, options) {
@@ -18,7 +19,7 @@ Uboxie.StreamApiModule = (function() {
                 contentToDisplay += '<div class="col-xs-7 col-md-7 section-box">';
 
                 contentToDisplay += '<h5 class="song-title">' + element[options.trackNameKey] + '</h5>';
-                contentToDisplay += '<p class="song-info"><b class="song-author">' + element[options.artistKey] + "</b> " + (element[options.albumKey] || "") + '</p>';
+                contentToDisplay += '<p class="song-info"><b class="song-author">' + element[options.artistKey] + '</b> <span class="album-info">' + (element[options.albumKey] || "") + '</span></p>';
                 contentToDisplay += '</div></a></div>';
             });
             contentToDisplay += '</div></div>';
