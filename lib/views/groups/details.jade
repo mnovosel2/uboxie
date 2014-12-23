@@ -11,55 +11,78 @@ block content
 				#playback
 				#dz-root
 				.col-md-1.col-lg-1
-				#group-queue.list-group.col-md-6.col-lg-6
+				#group-queue.list-group.col-md-12.col-lg-12.default-skin
 	include ../includes/player
 block custom-scripts
 	script.
-		Uboxie.PlaybackModule.instanciatePlayback("#playback");
-		$(document).on('keyup','#query', function(e){
-			e.preventDefault();
-			var query=$(this).val().trim();
-			if(query==""){
-				$('#result-list').empty();
-			}
-			if(query.length>=3){
-				Uboxie.StreamApiModule.getSearchResults(query).done(function(data){
-					if(data.status){
-						Uboxie.StreamApiModule.createSearchResultList(data.result,"#result-list",{
-							trackNameKey:"name",
-							artistKey:"artist",
-							iconKey:"icon",
-							albumKey:"info",
-							trackKey:"key",
-							trackDuration:"duration",
+		$(function(){
+			Uboxie.PlaybackModule.instanciatePlayback("#playback");
+			$('#group-queue').slimScroll({
+					height: '400px',
+					alwaysVisible: true,
+					size: '5px',
+					
+			});
+			$('#result-list').slimScroll({
+					height: '400px',
+					alwaysVisible: true,
+					size: '5px',		
+			});
+			$(window).keydown(function(event){
+				if(event.keyCode == 13) {
+			  		event.preventDefault();
+			  		return false;
+				}
+		  	});
+			$(document).on('keyup','#query', _.debounce(function(){
+				var query=$(this).val().trim(),
+					typingTimer;
+				
+				if(query==""){
+					$('#result-list').empty();
+					$('#result-list').hide();
+					$('#result-list').parent('.slimScrollDiv').hide();
+				}
+				if(query.length>=3){
+						Uboxie.StreamApiModule.getSearchResults(query).done(function(data){
+							if(data.status){
+								Uboxie.StreamApiModule.createSearchResultList(data.result,"#result-list",{
+									trackNameKey:"name",
+									artistKey:"artist",
+									iconKey:"icon",
+									albumKey:"info",
+									trackKey:"key",
+									trackDuration:"duration",
 
+								});
+							}else{
+								alert("Error while handling request. Please log in again.");
+							}
 						});
-					}else{
-						alert("Error while handling request. Please log in again.");
+				}
+			},1000));
+			$(document).on('click','.result-item',function(e){
+				e.preventDefault();
+				var self=$(this),
+					track={
+						key:self.data('key'),
+						name:self.find('.song-title').text(),
+						duration:self.data('duration'),
+						info:self.find('.album-info').text(),
+						groupId:$('.group-container').data('group'),
+						startTime:null,
+						icon:self.find('.album-icon').attr('src'),
+						artist:self.find('.song-author').text()
 					}
-				});
+					Uboxie.PlaybackModule.addToGroupQueue(track);
+			});
+			window.onbeforeunload=function(e){
+				 var message = "This page is asking you to confirm that you want to leave - data you have entered may not be saved.",
+				  e = e || window.event;
+				  if (e) {
+					e.returnValue = message;
+				  }
+				  return message;
 			}
 		});
-		$(document).on('click','.result-item',function(e){
-			e.preventDefault();
-			var self=$(this),
-				track={
-					key:self.data('key'),
-					name:self.find('.song-title').text(),
-					duration:self.data('duration'),
-					info:self.find('.album-info').text(),
-					groupId:$('.group-container').data('group'),
-					startTime:null,
-					icon:self.find('.album-icon').attr('src'),
-					artist:self.find('.song-author').text()
-				};
-			Uboxie.PlaybackModule.addToGroupQueue(track);
-		})
-		window.onbeforeunload=function(e){
-			 var message = "This page is asking you to confirm that you want to leave - data you have entered may not be saved.",
-			  e = e || window.event;
-			  if (e) {
-			    e.returnValue = message;
-			  }
-			  return message;
-		}
+

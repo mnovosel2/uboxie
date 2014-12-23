@@ -30,37 +30,53 @@ body {
     z-index: 150;
     border-bottom: 1px solid #e8eaf6;
 }
+.slimScrollBar {
+    background: none repeat scroll 0 0 #757575 !important;
+    border-radius: 0px !important;
+    opacity: 0.4 !important;
+    width: 5px !important;
+}
 #result-list {
     display: none;
+    background-color: rgba(255,255,255,.5);
 }
-.group-container{
+.group-container {
     margin-top: 25px !important;
-
 }
-.group-container #group-queue{
-      background-color: white;
-      padding:15px;
-          -webkit-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
+#searchTrackForm {
+    margin-bottom: -13px !important;
+}
+.group-container #group-queue {
+    background-color: white;
+    -webkit-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
     -moz-box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
     box-shadow: 0px 1px 14px 0px rgba(50, 50, 50, 0.16);
+    max-height: 450px;
+    overflow: hidden;
+    width: 100% !important;
+    padding-right: 0px !important;
 }
-.group-container #group-queue .queue-item{
+#group-queue .scrollable, #group-queue .viewport, #group-queue .overview {
+    width: 100% !important;
+}
+.group-container #group-queue .queue-item {
     line-height: 1.5em;
-    color:#BDBDBD;
+    color: #BDBDBD;
     font-size: 16px;
     border-bottom: 1px solid #eeeeee;
-    padding: 9px;
+    padding: 10px 10px 10px 15px;
 }
-.group-container #group-queue .queue-item:last-child{
-     border-bottom: none;
+.group-container #group-queue .queue-item:last-child {
+    border-bottom: none;
 }
-
-.group-container #group-queue .queue-item.active{
-    color:white;
+.group-container #group-queue .queue-item.active {
     background-color: #303F9F;
 }
-#group-queue  .list-group-item.active:hover, #group-queue .list-group-item.active:focus{
-    outline:0px solid rgba(0, 0, 0, 0) !important;
+.group-container #group-queue .queue-item.active p{
+    color:white;
+}
+#group-queue .list-group-item.active:hover, #group-queue .list-group-item.active:focus {
+    outline: 0px solid rgba(0, 0, 0, 0) !important;
 }
 .album-icon {
     max-width: 50px;
@@ -68,7 +84,15 @@ body {
 .result-item-ctn {
     min-height: 70px !important;
     border-bottom: 1px solid #D8D8D8;
-    margin-bottom: 7px !important;
+    padding-top: 6px;
+    opacity:0.7;
+}
+.result-item-ctn:hover {
+    background-color: #5C6BC0;
+    opacity:1;
+}
+.result-item-ctn:hover a{
+    color:white;
 }
 .song-title {
     font-weight: bold;
@@ -76,6 +100,12 @@ body {
 }
 .song-info {
     font-size: 12px;
+}
+.track-artist{
+    font-size: 14px;
+}
+.track-name{
+    color:#9E9E9E;
 }
 .item-in-group {
     overflow: hidden;
@@ -122,6 +152,10 @@ body {
     font-size: 15px !important;
     line-height: 1.8em;
     text-transform: uppercase;
+}
+.queue-item p{
+    margin:0 0 3px !important;
+    line-height: 1.3em;
 }
 .group-menu .list-group-item a {
     text-decoration: none;
@@ -215,29 +249,29 @@ body {
     max-width: 100%;
     vertical-align: top;
 }
-.login-msg{
+.login-msg {
     width: 35%;
     text-align: center;
     position: relative;
-    left:32%;
-    margin-top:10%;
+    left: 32%;
+    margin-top: 10%;
 }
-.login-msg .login-deezer{
-    color:#5C6BC0;
+.login-msg .login-deezer {
+    color: #5C6BC0;
 }
-.login-msg .register-deezer{
+.login-msg .register-deezer {
     font-size: 12px;
-   color:#a9a9a9;
-   display: inline-block;
+    color: #a9a9a9;
+    display: inline-block;
 }
-.login-msg .deezer-btn{
+.login-msg .deezer-btn {
     display: inline-block;
     margin-top: 25px;
     background-color: #00897b !important;
 }
-.login-msg h1{
+.login-msg h1 {
     text-transform: uppercase;
-    color:#a9a9a9;
+    color: #a9a9a9;
     line-height: 1.2em;
 }
 .player-container {
@@ -293,7 +327,7 @@ body {
 .progress-bar.player-progress-bar {
     background-color: #fbfbfb !important;
 }
-@media(min-width:992px) and (max-width: 1170px){
+@media(min-width:992px) and (max-width: 1170px) {
     .group-image {
         max-width: 50%;
     }

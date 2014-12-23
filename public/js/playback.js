@@ -19,12 +19,12 @@ Uboxie.PlaybackModule = (function() {
                 /**
                  * Developer key
                  */
-                 // appId:'148981',
+                appId: '148981',
                 /**
                  * Deployment key
                  */
-                appId: '148831',
-                channelUrl: 'http://uboxie.me/channel',
+                // appId: '148831',
+                channelUrl: 'http://localhost/channel',
                 player: {
                     onload: function() {
                         player.restoreGroupState();
@@ -32,29 +32,32 @@ Uboxie.PlaybackModule = (function() {
                             isPlaying = true;
                         });
                         DZ.Event.subscribe('current_track', function(trackInfo) {
-                            var track = trackInfo.track;
-                            currentSongDuration = track.duration;
-                            player.displaySongEnd('.player-song-end');
-                            currentTrack = track.id;
+                            var track =null;                     
                             if (musicQueue.length > 0) {
-                                musicQueue.shift();
+                                track=musicQueue.shift();
                             }
-                            /**
-                             * Change keys for track
-                             */
-                            player.updateSongStartTime(track.id, player.preserveSongState);
+                            if(track){
+                            	currentTrack=track._id;
+                            	currentSongDuration = track.duration;
+                            	player.displaySongEnd('.player-song-end');  
+                            }
+                            player.updateSongStartTime(track._id, player.preserveSongState);
                         });
                         DZ.Event.subscribe('track_end', function(position) {
                             var trackToPlay = null;
                             player.songFinished(currentTrack, function() {
                                 if (musicQueue.length === 0) {
                                     isPlaying = false;
+                                    trackToPlay=null;
                                 } else if (musicQueue.length > 0) {
                                     trackToPlay = musicQueue[0];
-                                    DZ.player.playTracks([trackToPlay]);
+                                    DZ.player.playTracks([trackToPlay.key]);
                                 }
                                 $('.player-progress-bar').css('width', '0%');
-                                $(QUEUE_CONTAINER).find('.active').removeClass('active').next('a').addClass('active');
+                                $(QUEUE_CONTAINER).find('.active').removeClass('active');
+                                if (trackToPlay) {
+                                    $(QUEUE_CONTAINER).find('#' + trackToPlay._id).addClass('active');
+                                }
                             });
                         });
                         DZ.Event.subscribe('player_position', function(positionInfo) {
@@ -75,22 +78,22 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
-        updateSongStartTime: function(trackKey, callback) {
+        updateSongStartTime: function(trackId, callback) {
             var startTime = new Date().getTime();
             $.put('/api/1/group/' + groupId + '/state/playtime', {
-                trackId: trackKey,
+                trackId: trackId,
                 startTime: startTime
             }, function(data) {
                 if (data.status) {
                     callback({
-                        trackId: trackKey
+                        trackId: trackId
                     });
                 }
             });
         },
         restoreGroupState: function() {
             $.get('/api/1/group/' + groupId + '/fetch/current', function(data) {
-                var currentGroup=data.message,
+                var currentGroup = data.message,
                     currentUserTime = new Date().getTime(),
                     songsInGroup = currentGroup.songsInGroup,
                     startTime,
@@ -98,25 +101,26 @@ Uboxie.PlaybackModule = (function() {
                     currentSong = currentGroup.currentSong;
                 if (songsInGroup.length > 0) {
                     musicQueue.length = 0;
+
                     for (var i = 0; i < songsInGroup.length; i++) {
                         if (songsInGroup[i].finished == true) {
-                            player.addListItem(QUEUE_CONTAINER, songsInGroup[i].key, songsInGroup[i].name, false);
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[i]._id, songsInGroup[i], false);
                         }
                     }
                     for (var j = 0; j < songsInGroup.length; j++) {
-                        if (currentSong.key != null && songsInGroup[j].key == currentSong.key) {
+                        if (currentSong._id != null && songsInGroup[j]._id == currentSong._id) {
                             startTime = new Date(songsInGroup[j].startTime).getTime();
                             songOffsetInSeconds = (currentUserTime - startTime) / 1000;
                             if (songOffsetInSeconds <= currentSong.duration) {
                                 DZ.player.playTracks([songsInGroup[j].key], 0, songOffsetInSeconds);
-                                musicQueue.push(songsInGroup[j].key);
-                                player.addListItem(QUEUE_CONTAINER, currentSong.key, currentSong.name, true);
+                                musicQueue.push(songsInGroup[j]);
+                                player.addListItem(QUEUE_CONTAINER, currentSong._id, currentSong, true);
                             }
 
                         }
-                        if (songsInGroup[j].finished == false && songsInGroup[j].key != currentSong.key) {
-                            musicQueue.push(songsInGroup[j].key);
-                            player.addListItem(QUEUE_CONTAINER, songsInGroup[j].key, songsInGroup[j].name, false);
+                        if (songsInGroup[j].finished == false && songsInGroup[j]._id != currentSong._id) {
+                            musicQueue.push(songsInGroup[j]);
+                            player.addListItem(QUEUE_CONTAINER, songsInGroup[j]._id, songsInGroup[j], false);
                         }
 
                     }
@@ -124,43 +128,48 @@ Uboxie.PlaybackModule = (function() {
             });
         },
         addToGroupQueue: function(track, container, addToQueue) {
-            var listItem = '<a href="#" class="list-group-item" id="' + track.key + '">' + track.name + '</a>',
-                childrenLength = 0,
+            var childrenLength = 0,
                 trackToPlay;
             $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
                 if (data.status) {
-                    player.addListItem(QUEUE_CONTAINER, track.key, track.name, false);
-                    musicQueue.push(track.key);
+                    player.addListItem(QUEUE_CONTAINER, data.message._id, track, false);
+                    musicQueue.push(data.message);
                     if (!isPlaying) {
-                        DZ.player.playTracks([track.key]);
-                        $(QUEUE_CONTAINER).find('#' + track.key).addClass('active');
+                        DZ.player.playTracks([data.message.key]);
+                        $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
                     }
+
                     socket.emit('songAdded', track);
                 }
             });
         },
-        songFinished: function(trackKey, callback) {
+        songFinished: function(trackId, callback) {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
-                trackKey: trackKey
+                trackId: trackId
             }, function(data) {
                 if (data.status) {
                     callback();
                 }
             });
         },
-        addListItem: function(container, trackKey, name, active, prepend) {
+        addListItem: function(container, trackId, track, active, prepend) {
             var listItem = "";
             if (active) {
-                listItem = '<a href="#" class="list-group-item queue-item active" id="' + trackKey + '">' + name + '</a>';
+                listItem = '<li href="#" class="list-group-item queue-item active" id="' + trackId + '"><p class="track-name">' + track.name + '</p><p class="track-artist">' + track.artist + '</p></li>';
             } else {
-                listItem = '<a href="#" class="list-group-item queue-item" id="' + trackKey + '">' + name + '</a>';
+                listItem = '<li href="#" class="list-group-item queue-item" id="' + trackId + '"><p class="track-name">' + track.name + '</p><p class="track-artist">' + track.artist + '</p></li>';
             }
             if (prepend) {
                 $(container).prepend(listItem);
             } else {
                 $(container).append(listItem);
             }
+            Uboxie.Helpers.createDynamicScrollbar(container, '.active', {
+                height: '400px',
+                alwaysVisible: true,
+                size: '5px',
 
+            });
         },
         displaySongEnd: function(container) {
             var minutes = Math.floor(currentSongDuration / 60),
