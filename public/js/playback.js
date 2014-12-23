@@ -19,11 +19,11 @@ Uboxie.PlaybackModule = (function() {
                 /**
                  * Developer key
                  */
-                appId: '148981',
+                // appId: '148981',
                 /**
                  * Deployment key
                  */
-                // appId: '148831',
+                appId: '148831',
                 channelUrl: 'http://localhost/channel',
                 player: {
                     onload: function() {
