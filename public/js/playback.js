@@ -1,5 +1,8 @@
 Uboxie.PlaybackModule = (function() {
-    //Private vars
+    /**
+     * Private variables for PlaybackModule
+     * 
+     */
     var playbackContainer = null,
         QUEUE_CONTAINER = "#group-queue",
         isPlaying = false,
@@ -30,6 +33,10 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [playerOnloadCallback bind all main events on player load]
+         * 
+         */
         playerOnloadCallback: function() {
             player.restoreGroupState();
             DZ.Event.subscribe('player_play', function(e) {
@@ -85,6 +92,11 @@ Uboxie.PlaybackModule = (function() {
                 DZ.player.seek(parseInt(restorePosition, 10));
             });
         },
+        /**
+         * [preserveSongState send AJAX request and save current song info]
+         * @param  {Object} trackInfo [current track object]
+         * 
+         */
         preserveSongState: function(trackInfo) {
             $.post('/api/1/group/' + groupId + '/state/current', trackInfo, function(data) {
                 if (data.status) {
@@ -92,6 +104,11 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [updateSongStartTime send put request to update song start time]
+         * @param  {String}   trackId  [id of current song]
+         * @param  {Function} callback [Success callback function]
+         */
         updateSongStartTime: function(trackId, callback) {
             var startTime = new Date().getTime();
             $.put('/api/1/group/' + groupId + '/state/playtime', {
@@ -105,6 +122,9 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [restoreGroupState fetch and restore current group state]
+         */
         restoreGroupState: function() {
             $.get('/api/1/group/' + groupId + '/fetch/current', function(data) {
                 var currentGroup = data.message,
@@ -140,6 +160,12 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [addToGroupQueue add selected track to group playing queue]
+         * @param {Object} track      [Object containing selected track info]
+         * @param {Object} container  [jQuery DOM object referencing queue container]
+         * @param {boolean} addToQueue [Indicator of adding method]
+         */
         addToGroupQueue: function(track, container, addToQueue) {
             var childrenLength = 0,
                 trackToPlay;
@@ -159,6 +185,12 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [songFinished update song finished status]
+         * @param  String   trackId  [Unique song id]
+         * @param  {Function} callback [On success callback]
+         * 
+         */
         songFinished: function(trackId, callback) {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
                 trackId: trackId
@@ -168,6 +200,14 @@ Uboxie.PlaybackModule = (function() {
                 }
             });
         },
+        /**
+         * [addListItem add DOM search item to group playing queue]
+         * @param String container [String representing DOM element]
+         * @param String trackId   [Unique song id]
+         * @param {Object} track     [Track info object]
+         * @param Boolean active    [Indicator if current song is active]
+         * @param Boolean prepend   [Indicator to add current song element on beginning of a list]
+         */
         addListItem: function(container, trackId, track, active, prepend) {
             var listItem = "";
             if (active) {
@@ -182,6 +222,10 @@ Uboxie.PlaybackModule = (function() {
             }
             $(QUEUE_CONTAINER).trigger('reinit_scrollbar', QUEUE_CONTAINER);
         },
+        /**
+         * [displaySongEnd display song finish time]
+         * @param  String container [String referencing DOM element]
+         */
         displaySongEnd: function(container) {
             var minutes = Math.floor(currentSongDuration / 60),
                 balanceOfSeconds = currentSongDuration % 60;
@@ -193,6 +237,11 @@ Uboxie.PlaybackModule = (function() {
             }
             $(container).text(minutes + ':' + balanceOfSeconds);
         },
+        /**
+         * [displaySongEnd display current song duration]
+         * @param  String container [String referencing DOM element]
+         * @param  Integer position [Current position in seconds]
+         */
         displaySongDuration: function(container, position) {
             var minutes = Math.floor(position / 60),
                 balanceOfSeconds = Math.floor(position % 60);
