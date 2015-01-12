@@ -20,13 +20,12 @@ block custom-scripts
 			$('#group-queue').slimScroll({
 					height: '400px',
 					alwaysVisible: true,
-					size: '5px',
-					
+					size: '5px'	
 			});
 			$('#result-list').slimScroll({
 					height: '400px',
 					alwaysVisible: true,
-					size: '5px',		
+					size: '5px'		
 			});
 			$(window).keydown(function(event){
 				if(event.keyCode == 13) {
@@ -35,13 +34,10 @@ block custom-scripts
 				}
 		  	});
 			$(document).on('keyup','#query', _.debounce(function(){
-				var query=$(this).val().trim(),
-					typingTimer;
+				var query=$(this).val().trim();
 				
 				if(query==""){
-					$('#result-list').empty();
-					$('#result-list').hide();
-					$('#result-list').parent('.slimScrollDiv').hide();
+					$('#result-list').empty().hide().parent('.slimScrollDiv').hide();
 				}
 				if(query.length>=3){
 						Uboxie.StreamApiModule.getSearchResults(query).done(function(data){
@@ -63,18 +59,18 @@ block custom-scripts
 			},500));
 			$(document).on('click','.result-item',function(e){
 				e.preventDefault();
-				var self=$(this),
+				var _this=$(this),
 					track={
-						key:self.data('key'),
-						name:self.find('.song-title').text(),
-						duration:self.data('duration'),
-						info:self.find('.album-info').text(),
+						key:_this.data('key'),
+						name:_this.find('.song-title').text(),
+						duration:_this.data('duration'),
+						info:_this.find('.album-info').text(),
 						groupId:$('.group-container').data('group'),
 						startTime:null,
-						icon:self.find('.album-icon').attr('src'),
-						artist:self.find('.song-author').text()
-					}
-					Uboxie.PlaybackModule.addToGroupQueue(track);
+						icon:_this.find('.album-icon').attr('src'),
+						artist:_this.find('.song-author').text()
+					};
+				Uboxie.PlaybackModule.addToGroupQueue(track);
 			});
 			window.onbeforeunload=function(e){
 				 var message = "This page is asking you to confirm that you want to leave - data you have entered may not be saved.",

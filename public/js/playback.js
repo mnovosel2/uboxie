@@ -2,14 +2,14 @@ Uboxie.PlaybackModule = (function() {
     //Private vars
     var playbackContainer = null,
         QUEUE_CONTAINER = "#group-queue",
-        tmpQueue = [],
         isPlaying = false,
-        currentSongDuration = 1,
+        currentSongDuration = 0,
         currentTrack = "",
         groupId = $('.group-container').data('group'),
-        currentTrackFinished = false,
-        currentPosition = 1,
+        currentPosition = 0,
+        restorePosition = 0,
         musicQueue = [],
+        trackSeeked=false,
         player;
     return {
         instanciatePlayback: function(container) {
@@ -24,51 +24,65 @@ Uboxie.PlaybackModule = (function() {
                  * Deployment key
                  */
                 appId: '148831',
-                channelUrl: 'http://localhost/channel',
+                channelUrl: 'http://uboxie.me/channel',
                 player: {
-                    onload: function() {
-                        player.restoreGroupState();
-                        DZ.Event.subscribe('player_play', function(e) {
-                            isPlaying = true;
-                        });
-                        DZ.Event.subscribe('current_track', function(trackInfo) {
-                            var track =null;                     
-                            if (musicQueue.length > 0) {
-                                track=musicQueue.shift();
-                            }
-                            if(track){
-                            	currentTrack=track._id;
-                            	currentSongDuration = track.duration;
-                            	player.displaySongEnd('.player-song-end');  
-                            }
-                            player.updateSongStartTime(track._id, player.preserveSongState);
-                        });
-                        DZ.Event.subscribe('track_end', function(position) {
-                            var trackToPlay = null;
-                            player.songFinished(currentTrack, function() {
-                                if (musicQueue.length === 0) {
-                                    isPlaying = false;
-                                    trackToPlay=null;
-                                } else if (musicQueue.length > 0) {
-                                    trackToPlay = musicQueue[0];
-                                    DZ.player.playTracks([trackToPlay.key]);
-                                }
-                                $('.player-progress-bar').css('width', '0%');
-                                $(QUEUE_CONTAINER).find('.active').removeClass('active');
-                                if (trackToPlay) {
-                                    $(QUEUE_CONTAINER).find('#' + trackToPlay._id).addClass('active');
-                                }
-                            });
-                        });
-                        DZ.Event.subscribe('player_position', function(positionInfo) {
-                            currentPosition = Math.floor(100 * positionInfo[0] / currentSongDuration);
-                            if (currentPosition > 0) {
-                                $('.player-progress-bar').css('width', currentPosition + '%');
-                            }
-                            player.displaySongDuration('.player-song-start', positionInfo[0]);
-                        });
-                    }
+                    onload: player.playerOnloadCallback
                 }
+            });
+        },
+        playerOnloadCallback: function() {
+            player.restoreGroupState();
+            DZ.Event.subscribe('player_play', function(e) {
+                isPlaying = true;
+                if(restorePosition && !trackSeeked){
+                    DZ.player.seek(parseInt(restorePosition, 10));
+                    trackSeeked=true;
+                }
+            });
+            DZ.Event.subscribe('current_track', function(trackInfo) {
+                var track = null;
+
+                if (currentTrack) {
+                    currentSongDuration = currentTrack.duration;
+                    player.displaySongEnd('.player-song-end');
+                    $(QUEUE_CONTAINER).trigger('reinit_scrollbar', QUEUE_CONTAINER);
+                    player.updateSongStartTime(currentTrack._id, player.preserveSongState);
+                }
+            });
+            DZ.Event.subscribe('track_end', function(position) {
+                var trackToPlay = null;
+                player.songFinished(currentTrack._id, function() {
+                    if (musicQueue.length === 0) {
+                        isPlaying = false;
+                        trackToPlay = null;
+                    } else if (musicQueue.length > 0) {
+                        trackToPlay = musicQueue.shift();
+                        currentTrack = trackToPlay;
+                        DZ.player.playTracks([trackToPlay.key]);
+                    }
+                    $('.player-progress-bar').css('width', '0%');
+                    $(QUEUE_CONTAINER).find('.active').removeClass('active');
+                    if (trackToPlay) {
+                        $(QUEUE_CONTAINER).find('#' + trackToPlay._id).addClass('active');
+                    }
+                });
+            });
+            DZ.Event.subscribe('player_position', function(positionInfo) {
+                currentPosition = Math.floor(100 * positionInfo[0] / currentSongDuration);
+                if (currentPosition > 0) {
+                    $('.player-progress-bar').css('width', currentPosition + '%');
+                }
+                player.displaySongDuration('.player-song-start', positionInfo[0]);
+            });
+            $(document).on('reinit_scrollbar', function(e, container) {
+                Uboxie.Helpers.createDynamicScrollbar(container, '.active', {
+                    height: '400px',
+                    alwaysVisible: true,
+                    size: '5px'
+                });
+            });
+            $(document).on('click', '.player-progress', function() {
+                DZ.player.seek(parseInt(restorePosition, 10));
             });
         },
         preserveSongState: function(trackInfo) {
@@ -101,28 +115,27 @@ Uboxie.PlaybackModule = (function() {
                     currentSong = currentGroup.currentSong;
                 if (songsInGroup.length > 0) {
                     musicQueue.length = 0;
-
                     for (var i = 0; i < songsInGroup.length; i++) {
-                        if (songsInGroup[i].finished == true) {
+                        if (songsInGroup[i].finished === true) {
                             player.addListItem(QUEUE_CONTAINER, songsInGroup[i]._id, songsInGroup[i], false);
                         }
                     }
                     for (var j = 0; j < songsInGroup.length; j++) {
-                        if (currentSong._id != null && songsInGroup[j]._id == currentSong._id) {
+                        if (currentSong._id !== null && songsInGroup[j]._id == currentSong._id) {
                             startTime = new Date(songsInGroup[j].startTime).getTime();
                             songOffsetInSeconds = (currentUserTime - startTime) / 1000;
                             if (songOffsetInSeconds <= currentSong.duration) {
-                                DZ.player.playTracks([songsInGroup[j].key], 0, songOffsetInSeconds);
-                                musicQueue.push(songsInGroup[j]);
+                                currentTrack = songsInGroup[j];
+                                restorePosition = Math.floor(100 * songOffsetInSeconds / currentSong.duration);
+                                console.log(restorePosition);
+                                DZ.player.playTracks([currentTrack.key], 0, parseInt(songOffsetInSeconds, 10));
                                 player.addListItem(QUEUE_CONTAINER, currentSong._id, currentSong, true);
                             }
-
                         }
-                        if (songsInGroup[j].finished == false && songsInGroup[j]._id != currentSong._id) {
+                        if (songsInGroup[j].finished === false && songsInGroup[j]._id != currentSong._id) {
                             musicQueue.push(songsInGroup[j]);
                             player.addListItem(QUEUE_CONTAINER, songsInGroup[j]._id, songsInGroup[j], false);
                         }
-
                     }
                 }
             });
@@ -132,14 +145,17 @@ Uboxie.PlaybackModule = (function() {
                 trackToPlay;
             $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
                 if (data.status) {
-                    player.addListItem(QUEUE_CONTAINER, data.message._id, track, false);
                     musicQueue.push(data.message);
+                    player.addListItem(QUEUE_CONTAINER, data.message._id, track, false);
                     if (!isPlaying) {
-                        DZ.player.playTracks([data.message.key]);
+                        console.log('test');
+                        currentTrack = musicQueue.shift();
+                        DZ.player.playTracks([currentTrack.key]);
                         $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
+                        console.log('added');
                     }
-
                     socket.emit('songAdded', track);
+                    console.log(musicQueue);
                 }
             });
         },
@@ -164,12 +180,7 @@ Uboxie.PlaybackModule = (function() {
             } else {
                 $(container).append(listItem);
             }
-            Uboxie.Helpers.createDynamicScrollbar(container, '.active', {
-                height: '400px',
-                alwaysVisible: true,
-                size: '5px',
-
-            });
+            $(QUEUE_CONTAINER).trigger('reinit_scrollbar', QUEUE_CONTAINER);
         },
         displaySongEnd: function(container) {
             var minutes = Math.floor(currentSongDuration / 60),

@@ -2,13 +2,15 @@
 var Uboxie = {};
 Uboxie.Helpers = {
     createDynamicScrollbar: function(container, active, config) {
-        console.log(container);
+        var activeElement=$(container).find(active);
         if ($(container).parent('.slimScrollDiv').size() > 0) {
-            $(container).parent().replaceWith($(container));
-            if ($(container).find(active) > 0) {
+            config.wheelStep=10;
+            $(container).parent().replaceWith($(container));    
+            if (activeElement.length > 0) {
+                config.start=$(active);
                 $(container).slimScroll(config);
             } else {
-                console.log('not active');
+                delete config.start;
                 $(container).slimScroll(config);
             }
         }
