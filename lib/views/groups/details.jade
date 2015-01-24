@@ -17,6 +17,10 @@ block custom-scripts
 	script.
 		$(function(){
 			Uboxie.PlaybackModule.instanciatePlayback("#playback");
+			socket.on('updateGroupQueue',function(data){
+				console.log('Client track');        
+				Uboxie.PlaybackModule.updateGroupQueue(data);
+			});
 			$('#group-queue').slimScroll({
 					height: '400px',
 					alwaysVisible: true,
@@ -29,10 +33,10 @@ block custom-scripts
 			});
 			$(window).keydown(function(event){
 				if(event.keyCode == 13) {
-			  		event.preventDefault();
-			  		return false;
+					event.preventDefault();
+					return false;
 				}
-		  	});
+			});
 			$(document).on('keyup','#query', _.debounce(function(){
 				var query=$(this).val().trim();
 				
@@ -70,7 +74,9 @@ block custom-scripts
 						icon:_this.find('.album-icon').attr('src'),
 						artist:_this.find('.song-author').text()
 					};
-				Uboxie.PlaybackModule.addToGroupQueue(track);
+				Uboxie.PlaybackModule.addToGroupQueue(track).done(function(data) {
+					socket.emit('songAdded', data);
+				});
 			});
 			window.onbeforeunload=function(e){
 				 var message = "This page is asking you to confirm that you want to leave - data you have entered may not be saved.",
@@ -80,5 +86,13 @@ block custom-scripts
 				  }
 				  return message;
 			}
+			$.get('/api/1/user/current',function(data){
+				if(data.status){
+					socket.emit('joinGroup',$('.group-container').data('group'),data.message.name);
+				}
+			});
+
 		});
+	
+		
 

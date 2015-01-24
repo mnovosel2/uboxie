@@ -1,7 +1,7 @@
 Uboxie.PlaybackModule = (function() {
     /**
      * Private variables for PlaybackModule
-     * 
+     *
      */
     var playbackContainer = null,
         QUEUE_CONTAINER = "#group-queue",
@@ -12,7 +12,7 @@ Uboxie.PlaybackModule = (function() {
         currentPosition = 0,
         restorePosition = 0,
         musicQueue = [],
-        trackSeeked=false,
+        trackSeeked = false,
         player;
     return {
         instanciatePlayback: function(container) {
@@ -22,12 +22,12 @@ Uboxie.PlaybackModule = (function() {
                 /**
                  * Developer key
                  */
-                // appId: '148981',
+                appId: '148981',
                 /**
                  * Deployment key
                  */
-                appId: '148831',
-                channelUrl: 'http://uboxie.me/channel',
+                // appId: '148831',
+                channelUrl: 'http://localhost/channel',
                 player: {
                     onload: player.playerOnloadCallback
                 }
@@ -35,15 +35,15 @@ Uboxie.PlaybackModule = (function() {
         },
         /**
          * [playerOnloadCallback bind all main events on player load]
-         * 
+         *
          */
         playerOnloadCallback: function() {
             player.restoreGroupState();
             DZ.Event.subscribe('player_play', function(e) {
                 isPlaying = true;
-                if(restorePosition && !trackSeeked){
+                if (restorePosition && !trackSeeked) {
                     DZ.player.seek(parseInt(restorePosition, 10));
-                    trackSeeked=true;
+                    trackSeeked = true;
                 }
             });
             DZ.Event.subscribe('current_track', function(trackInfo) {
@@ -95,12 +95,12 @@ Uboxie.PlaybackModule = (function() {
         /**
          * [preserveSongState send AJAX request and save current song info]
          * @param  {Object} trackInfo [current track object]
-         * 
+         *
          */
         preserveSongState: function(trackInfo) {
             $.post('/api/1/group/' + groupId + '/state/current', trackInfo, function(data) {
                 if (data.status) {
-                    socket.emit('songChanged', data.message);
+                    // socket.emit('songChanged', data.message);
                 }
             });
         },
@@ -169,10 +169,12 @@ Uboxie.PlaybackModule = (function() {
         addToGroupQueue: function(track, container, addToQueue) {
             var childrenLength = 0,
                 trackToPlay;
-            $.post('/api/1/group/' + track.groupId + '/state/preserve', track, function(data) {
+            return $.post('/api/1/group/' + track.groupId + '/state/preserve', track);
+        },
+        updateGroupQueue: function(data) {
                 if (data.status) {
                     musicQueue.push(data.message);
-                    player.addListItem(QUEUE_CONTAINER, data.message._id, track, false);
+                    player.addListItem(QUEUE_CONTAINER, data.message._id, data.message, false);
                     if (!isPlaying) {
                         console.log('test');
                         currentTrack = musicQueue.shift();
@@ -180,17 +182,15 @@ Uboxie.PlaybackModule = (function() {
                         $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
                         console.log('added');
                     }
-                    socket.emit('songAdded', track);
                     console.log(musicQueue);
                 }
-            });
-        },
-        /**
-         * [songFinished update song finished status]
-         * @param  String   trackId  [Unique song id]
-         * @param  {Function} callback [On success callback]
-         * 
-         */
+            },
+            /**
+             * [songFinished update song finished status]
+             * @param  String   trackId  [Unique song id]
+             * @param  {Function} callback [On success callback]
+             *
+             */
         songFinished: function(trackId, callback) {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
                 trackId: trackId
