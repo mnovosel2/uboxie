@@ -7,22 +7,17 @@ block content
 block custom-scripts
 	script.
 		$(function(){
-
-			socket.on('newGroup', function(data){
-				console.log('data2: ' + data);
-			});
-
 			$('#newGroupForm').on('submit',function(e){
 				var data=$(this).serialize();
 				e.preventDefault();
 
-				/*$.post('/api/1/groups/new',data,function(res){
-					if(res.status){
+				$.post('/api/1/groups/new',data,function(res){
+					if(res.status){						
+						console.log(res);
+						socket.emit('addGroup', res.group);
 						window.location.href="/";
 					}
-				})*/
-
-				socket.emit('addGroup', { random: 2 });
+				});
 			});
 
 		});
