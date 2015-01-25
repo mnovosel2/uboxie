@@ -18,7 +18,7 @@ block content
 						li.list-group-item
 							a(href="#") Top rated
 				.col-lg-2.col-md-2
-				.groups-ctn.col-lg-10.col-md-10
+				#group-container.groups-ctn.col-lg-10.col-md-10
 					each item in groups
 						.col-lg-5.col-md-5
 							div.item-in-group
@@ -47,22 +47,27 @@ block custom-scripts
 		$(function(){
 
 			socket.on('newGroup', function(data){
+	
+				var imageUri = data.currentSong.icon || "/img/default-icon.jpg";
 
-				var toAppend ='<div class="col-lg-5 col-md-5"><div class="item-in-group"><div class="group-main-info"><h4 class="group-name">'
-				+ data.name + '</h4></div><div class="group-image-ctn"><img src="https://api.deezer.com/album/2267241/image" alt="Group cover image" class="img-responsive group-image">'
+				var toAppend ='<div class="item-in-group"><div class="group-main-info"><h4 class="group-name">'
+				+ data.name + '</h4></div><div class="group-image-ctn"><img src="' + imageUri + '" alt="Group cover image" class="img-responsive group-image">'
 				+ '<div class="image-overlay"></div></div><div class="owner-info"><div class="owner-basic"><span class="owner-desc">Created by</span><span class="owner-name">owner1</span>'
 				+ '</div><div class="owner-avatar"><img src="https://api.deezer.com/album/299519/image" alt="Avatar" class="img-responsive img-circle"></div></div><div class="group-info">'
 				+ '<div class="listeners-ctn"><span class="listeners">1 </span><span class="listeners-desc">listener(s)</span></div><div class="group-details-ctn">'
 				+ '<a href="group/'+ data.id +'" class="btn btn-primary"> <div class="icon-preview"><i class="mdi-av-play-circle-outline icon-group-btn"><span>JOIN GROUP</span>'
-				+ '</i></div></a></div></div></div></div>';
-				
-				console.log(toAppend);
+				+ '</i></div></a></div></div></div>';
 
-				$('groups-ctn col-lg-10 col-md-10').append(toAppend);
+				var container = $('#group-container').children().first();
+
+				if(container.length > 0)
+					$('#group-container').children().first().append(toAppend);
+				else
+					$('#group-container').append('<div class="col-lg-5 col-md-5">' + toAppend + '</div>');
 
 			});
 
-			var $container = $('.group-container');
+			//var $container = $('.group-container');
 
 		});
 		
