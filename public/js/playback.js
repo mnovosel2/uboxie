@@ -22,12 +22,12 @@ Uboxie.PlaybackModule = (function() {
                 /**
                  * Developer key
                  */
-                appId: '148981',
+                // appId: '148981',
                 /**
                  * Deployment key
                  */
-                // appId: '148831',
-                channelUrl: 'http://localhost/channel',
+                appId: '148831',
+                channelUrl: 'http://uboxie.me/channel',
                 player: {
                     onload: player.playerOnloadCallback
                 }
