@@ -18,7 +18,8 @@ block custom-scripts
 		$(function(){
 			Uboxie.PlaybackModule.instanciatePlayback("#playback");
 			socket.on('updateGroupQueue',function(data){
-				console.log('Client track');        
+				console.log('Client track');  
+				console.log(data);      
 				Uboxie.PlaybackModule.updateGroupQueue(data);
 			});
 			$('#group-queue').slimScroll({
