@@ -22,12 +22,12 @@ Uboxie.PlaybackModule = (function() {
                 /**
                  * Developer key
                  */
-                appId: '148981',
+                // appId: '148981',
                 /**
                  * Deployment key
                  */
-                // appId: '148831',
-                channelUrl: 'http://localhost/channel',
+                appId: '148831',
+                channelUrl: 'http://uboxie.me/channel',
                 player: {
                     onload: player.playerOnloadCallback
                 }
@@ -48,8 +48,9 @@ Uboxie.PlaybackModule = (function() {
             });
             DZ.Event.subscribe('current_track', function(trackInfo) {
                 var track = null;
-
+                console.log('evt curr track');
                 if (currentTrack) {
+                	console.log('evt if');
                     currentSongDuration = currentTrack.duration;
                     player.displaySongEnd('.player-song-end');
                     $(QUEUE_CONTAINER).trigger('reinit_scrollbar', QUEUE_CONTAINER);
@@ -59,6 +60,7 @@ Uboxie.PlaybackModule = (function() {
             DZ.Event.subscribe('track_end', function(position) {
                 var trackToPlay = null;
                 player.songFinished(currentTrack._id, function() {
+                	console.log('S. finished');
                     if (musicQueue.length === 0) {
                         isPlaying = false;
                         trackToPlay = null;
@@ -99,6 +101,9 @@ Uboxie.PlaybackModule = (function() {
          */
         preserveSongState: function(trackInfo) {
             $.post('/api/1/group/' + groupId + '/state/current', trackInfo, function(data) {
+            	console.log('current song');
+            	console.log(trackInfo);
+            	console.log(data);
                 if (data.status) {
                     // socket.emit('songChanged', data.message);
                 }
@@ -178,6 +183,8 @@ Uboxie.PlaybackModule = (function() {
                     if (!isPlaying) {
                         console.log('test');
                         currentTrack = musicQueue.shift();
+                        console.log('current');
+                        console.log(currentTrack);
                         DZ.player.playTracks([currentTrack.key]);
                         $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
                         console.log('added');
@@ -195,7 +202,9 @@ Uboxie.PlaybackModule = (function() {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
                 trackId: trackId
             }, function(data) {
+            	console.log('S.Finished data received');
                 if (data.status) {
+                	console.log('S. Finished data true');
                     callback();
                 }
             });
