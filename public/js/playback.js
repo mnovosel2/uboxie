@@ -40,6 +40,7 @@ Uboxie.PlaybackModule = (function() {
         playerOnloadCallback: function() {
             player.restoreGroupState();
             DZ.Event.subscribe('player_play', function(e) {
+                console.log('Playing player');
                 isPlaying = true;
                 if (restorePosition && !trackSeeked) {
                     DZ.player.seek(parseInt(restorePosition, 10));
