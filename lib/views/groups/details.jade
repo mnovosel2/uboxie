@@ -48,8 +48,7 @@ block custom-scripts
 				}
 			});
 			$(document).on('keyup','#query', _.debounce(function(){
-				var query=$(this).val().trim();
-				
+				var query=$(this).val().trim();	
 				if(query==""){
 					$('#result-list').empty().hide().parent('.slimScrollDiv').hide();
 				}
@@ -67,6 +66,7 @@ block custom-scripts
 								});
 							}else{
 								alert("Error while handling request. Please log in again.");
+								window.location.href='http://localhost/login';
 							}
 						});
 				}
