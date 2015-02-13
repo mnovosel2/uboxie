@@ -51,17 +51,17 @@ Uboxie.PlaybackModule = (function() {
                 var track = null;
                 console.log('evt curr track');
                 if (currentTrack) {
-                	console.log('evt if');
+                    console.log('evt if');
                     currentSongDuration = currentTrack.duration;
                     player.displaySongEnd('.player-song-end');
                     $(QUEUE_CONTAINER).trigger('reinit_scrollbar', QUEUE_CONTAINER);
-                    player.updateSongStartTime(currentTrack._id, player.preserveSongState);
+                    player.preserveSongState(currentTrack._id);
                 }
             });
             DZ.Event.subscribe('track_end', function(position) {
                 var trackToPlay = null;
                 player.songFinished(currentTrack._id, function() {
-                	console.log('S. finished');
+                    console.log('S. finished');
                     if (musicQueue.length === 0) {
                         isPlaying = false;
                         trackToPlay = null;
@@ -100,11 +100,14 @@ Uboxie.PlaybackModule = (function() {
          * @param  {Object} trackInfo [current track object]
          *
          */
-        preserveSongState: function(trackInfo) {
-            $.post('/api/1/group/' + groupId + '/state/current', trackInfo, function(data) {
-            	console.log('current song');
-            	console.log(trackInfo);
-            	console.log(data);
+        preserveSongState: function(trackId) {
+            var startTime = new Date().getTime();
+            $.post('/api/1/group/' + groupId + '/state/current', {
+                trackId: trackId,
+                startTime: startTime
+            }, function(data) {
+                console.log('current song');
+                console.log(data);
                 if (data.status) {
                     // socket.emit('songChanged', data.message);
                 }
@@ -178,34 +181,34 @@ Uboxie.PlaybackModule = (function() {
             return $.post('/api/1/group/' + track.groupId + '/state/preserve', track);
         },
         updateGroupQueue: function(data) {
-                if (data.status) {
-                    musicQueue.push(data.message);
-                    player.addListItem(QUEUE_CONTAINER, data.message._id, data.message, false);
-                    if (!isPlaying) {
-                        console.log('test');
-                        currentTrack = musicQueue.shift();
-                        console.log('current');
-                        console.log(currentTrack);
-                        DZ.player.playTracks([currentTrack.key]);
-                        $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
-                        console.log('added');
-                    }
-                    console.log(musicQueue);
+            if (data.status) {
+                musicQueue.push(data.message);
+                player.addListItem(QUEUE_CONTAINER, data.message._id, data.message, false);
+                if (!isPlaying) {
+                    console.log('test');
+                    currentTrack = musicQueue.shift();
+                    console.log('current');
+                    console.log(currentTrack);
+                    DZ.player.playTracks([currentTrack.key]);
+                    $(QUEUE_CONTAINER).find('#' + data.message._id).addClass('active');
+                    console.log('added');
                 }
-            },
-            /**
-             * [songFinished update song finished status]
-             * @param  String   trackId  [Unique song id]
-             * @param  {Function} callback [On success callback]
-             *
-             */
+                console.log(musicQueue);
+            }
+        },
+        /**
+         * [songFinished update song finished status]
+         * @param  String   trackId  [Unique song id]
+         * @param  {Function} callback [On success callback]
+         *
+         */
         songFinished: function(trackId, callback) {
             $.put('/api/1/group/' + groupId + '/state/songFinished', {
                 trackId: trackId
             }, function(data) {
-            	console.log('S.Finished data received');
+                console.log('S.Finished data received');
                 if (data.status) {
-                	console.log('S. Finished data true');
+                    console.log('S. Finished data true');
                     callback();
                 }
             });
