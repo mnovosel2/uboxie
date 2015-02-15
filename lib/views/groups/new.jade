@@ -12,10 +12,29 @@ block custom-scripts
 				e.preventDefault();
 
 				$.post('/api/1/groups/new',data,function(res){
-					if(res.status){						
-						console.log(res);
-						socket.emit('addGroup', res.group);
-						window.location.href="/";
+					if(res.status){	
+						//console.log('groupCreationData:');					
+						//console.log(res.group);
+						//socket.emit('addGroup', res.group);
+						socket.emit('addGroup', {
+								
+						    "created": res.group.created,
+						    "currentSong": {
+						    "duration": 0,
+						    "key": 0,
+						    "finished": false,
+						    "isPlaying": false
+						    },
+						    "name": res.group.name,
+						    "songsInGroup": [],
+						    "currentSongPosition": -1,
+						    "rating": 0.0,
+						    "listenerNumber": 0,
+						    "_id": res.group._id
+
+
+							});
+						//window.location.href="/";
 					}
 				});
 			});
