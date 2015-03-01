@@ -8,10 +8,14 @@ var app = require('_/app'),
     server = require('http').createServer(app).listen(config.port),
     sio = io.listen(server);
 
+var counter = 0;
+
 var interval = setInterval(function(){
 
     models.active.find({ active: true }, function(err, activeGroups){
         console.log(activeGroups);
+
+        var counted = false;
 
         for(var i = 0; i<activeGroups.length; i++){
             //console.log(activeGroups[i].id);
@@ -25,14 +29,37 @@ var interval = setInterval(function(){
                 }
             }
 
-            if(room)
+            if(room){
+                counter = 0;
+
                 console.log('People: ' + JSON.stringify(room));
-            else
+            }
+            else{
                 console.log('No people!');
+                console.log('Counted : ' + counted);
+                console.log('Counter : ' + counter);
+
+                if(!counted)
+                    counter += 1;
+
+                counted = true;
+
+                if(counter === 5){
+
+                    counter = 0;           
+
+                    console.log('Removed group : ' + activeGroups[i].id);
+
+                    models.music_group.findOne({ _id: activeGroups[i].id }).remove().exec();
+
+                    models.active.findOne({ _id: activeGroups[i]._id }).remove().exec();
+                }
+            }
         }
+
     });
 
-}, 1000);
+}, 2000);
 
 sio.on('connection', function(socket) {
     console.log("Client connected");
