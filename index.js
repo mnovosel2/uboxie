@@ -12,7 +12,87 @@ var counter = 0;
 
 var interval = setInterval(function(){
 
-    models.active.find({ active: true }, function(err, activeGroups){
+    async.waterfall([
+        function(callback){
+            models.active.find({ active: true }, function(err, activeGroups){
+                if(err){
+                    callback(err);
+                } else if (activeGroups.length === 0){
+                    //do nothing
+                } else {
+                    callback(null, activeGroups);
+                }
+            });
+        },
+        function(groups, callback){
+
+            var counted = false;
+
+            for(var i = 0; i<groups.length; i++){
+            //console.log(activeGroups[i].id);
+            //sio.sockets.in(activeGroups[i].id).emit('active', { id: activeGroups[i].id });
+                var res = []
+                , room = sio.sockets.adapter.rooms[groups[i].id];
+                if (room) {
+                    for (var id in room) {
+                        res.push(sio.sockets.adapter.nsp.connected[id]);
+                    }
+                }
+
+                if(room){
+                    counter = 0;
+
+                    console.log('People: ' + JSON.stringify(room));
+                }
+                else{
+                    console.log('No people!');
+                    console.log('Counted : ' + counted);
+                    console.log('Counter : ' + counter);
+
+                    if(!counted)
+                        counter += 1;
+
+                    counted = true;
+
+                    if(counter === 5){
+
+                        counter = 0;           
+
+                        console.log('Removed group : ' + groups[i].id);
+
+                        /*models.music_group.findOne({ _id: groups[i].id }).remove().exec();
+
+                        models.active.findOne({ _id: groups[i]._id }).remove().exec();*/
+
+                        callback(null, groups);
+                    }
+                }
+            }
+        },
+        /*function(optional, callback){
+            models.active.find({ active: true }, function(err, activated){
+                if(err){
+                    callback(err);
+                } else if (activated.length === 0){
+                    //do nothing no activated groups!
+                } else {
+                    callback(activated, null);
+                }
+            });
+        },*/
+        function(groupsToRemove, callback){
+            for(var i = 0; i<groupsToRemove.length; i++){
+                models.music_group.findOne({ _id: groupsToRemove[i].id }).remove().exec();
+
+                models.active.findOne({ _id: groupsToRemove[i]._id }).remove().exec();
+            }
+        }
+    ], function(err){
+        console.log(err);
+    });
+
+
+    /*models.active.find({ active: true }, function(err, activeGroups){
         console.log(activeGroups);
 
         var counted = false;
@@ -57,7 +137,7 @@ var interval = setInterval(function(){
             }
         }
 
-    });
+    });*/
 
 }, 2000);
 
