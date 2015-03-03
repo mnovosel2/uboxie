@@ -5,6 +5,8 @@ var app = require('_/app'),
     config = require('_/config'),
     socketController = require('_/app/'),
     io = require('socket.io'),
+    _ = require('underscore'),
+    _ = require('underscore.object.plus'),
     server = require('http').createServer(app).listen(config.port),
     sio = io.listen(server);
 
@@ -32,9 +34,9 @@ var interval = setInterval(function(){
                         res.push(sio.sockets.adapter.nsp.connected[id]);
                     }
                 }
-                if(room){
-                    counter = 0;
-                }
+                /*if(res.length > 0){
+                    counter -= 1;
+                }*/
                 else{
                     if(!counted)
                         counter += 1;
@@ -45,11 +47,14 @@ var interval = setInterval(function(){
                     }
                 }
             }
+
+            console.log('counter: ' + counter);
         },
         function(groupsToRemove, callback){
             for(var i = 0; i<groupsToRemove.length; i++){
                 models.music_group.findOne({ _id: groupsToRemove[i].id }).remove().exec();
                 models.active.findOne({ _id: groupsToRemove[i]._id }).remove().exec();
+                sio.emit('removeGroup', { id: groupsToRemove[i].id });
             }
         }
     ], function(err){

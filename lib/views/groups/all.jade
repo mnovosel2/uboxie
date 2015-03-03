@@ -21,7 +21,7 @@ block content
 				#group-container.groups-ctn.col-lg-10.col-md-10
 					each item in groups
 						.col-lg-5.col-md-5
-							div.item-in-group
+							div.item-in-group(data-id="#{item._id}")
 								.group-main-info
 									h4.group-name= item.name 
 								.group-image-ctn
@@ -56,7 +56,7 @@ block custom-scripts
 				if(data.currentSong)
 					imageUri = data.currentSong.icon || "/img/default-icon.jpg";
 
-				var toAppend ='<div class="col-lg-5 col-md-5"><div class="item-in-group"><div class="group-main-info"><h4 class="group-name">'
+				var toAppend ='<div class="col-lg-5 col-md-5"><div class="item-in-group" data-id="'+data._id+'"><div class="group-main-info"><h4 class="group-name">'
 				+ data.name + '</h4></div><div class="group-image-ctn"><img src="' + imageUri + '" alt="Group cover image" class="img-responsive group-image">'
 				+ '<div class="image-overlay"></div></div><div class="owner-info"><div class="owner-basic"><span class="owner-desc">Created by</span><span class="owner-name">'+data.owner.name+'</span>'
 				+ '</div><div class="owner-avatar"><img src="https://api.deezer.com/album/299519/image" alt="Avatar" class="img-responsive img-circle"></div></div><div class="group-info">'
@@ -71,6 +71,10 @@ block custom-scripts
 				else
 					$('#group-container').append('<div class="col-lg-5 col-md-5">' + toAppend + '</div>');
 
+			});
+
+			socket.on('removeGroup', function(data){
+				$('div[data-id="'+data.id+'"]').remove();
 			});
 
 			//var $container = $('.group-container');
