@@ -1,0 +1,101 @@
+.btn-deezer {
+    font-family: $default-font-family;
+    background: black;
+    color: white;
+    display: block;
+    overflow: hidden;
+    display: inline-block;
+    margin-top: 20px;
+    text-transform: uppercase;
+    @include respond-to(small-screens) {
+        font-size: 12px;
+        padding: 3px !important;
+        width:115px;
+    };
+    @include respond-to(small-medium-screens) {
+        font-size: 12px;
+        padding: 3px !important;
+        width: 125px;
+    };
+    @include respond-to(medium-screens) {
+        font-size: 12px;
+        padding: 3px !important;
+        width: 125px;
+    };
+    @include respond-to(wide-screens) {
+        font-size: 14px;
+        padding: 4px;
+        width:150px;
+    };
+}
+.btn-deezer img {
+    display: block;
+    position: relative; 
+    padding-bottom: 0 !important;
+    padding-top: 5px !important;
+    @include respond-to(small-screens) {
+        max-width: 50%;
+        left: 25%;
+    };
+    @include respond-to(small-medium-screens) {
+        max-width: 60%;
+    	left: 20%;
+    };
+    @include respond-to(medium-screens) {
+       max-width: 60%;
+       left: 20%;
+    };
+    @include respond-to(wide-screens) {
+        max-width: 57%;
+        left: 21%;
+    };
+}
+.btn-deezer.btn:hover {
+    color: white !important;
+}
+.btn-gplay {
+    margin: 18px 18px 0;
+    display: inline-block;
+    background: black;
+    padding: 4px 3px !important;
+    @include respond-to(small-screens) {
+        font-size: 12px;
+        width: 115px;
+    };
+    @include respond-to(small-medium-screens) {
+        font-size: 12px;
+       
+        width: 132px;
+    };
+    @include respond-to(medium-screens) {
+        font-size: 12px;   
+        width: 132px;
+    };
+    @include respond-to(wide-screens) {
+        font-size: 16px;
+        width:153px;
+    };
+    img {
+        max-width: 85%;
+    }
+}
+.btn-join-group{
+	color:#515151;
+	text-align:center;
+	font-size:15px;
+	background: transparent;
+	position: relative;
+	left:0;
+	width:100% !important;
+	border-radius:0px !important;
+	border-top:1px solid #d1d1d1;
+	bottom:0;
+	.fa-music{
+		color:#ee5537!important;
+	}
+	.join-group-text{
+		font-family: $default-font-family !important;
+		display: inline-block;
+		margin-left: 9px;
+	}
+}

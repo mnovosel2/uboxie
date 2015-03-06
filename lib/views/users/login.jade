@@ -1,10 +1,19 @@
 extends ../default/layout
 block content
-	.login-msg
-		h1 Will you be so kind and connect with your
-			br 
-			span.login-deezer Deezer 
-			span account?
-		span.register-deezer If you don't have an account, you can create one for FREE
-		br
-		a.btn.btn-success.deezer-btn(href="#{authLink}") Connect with Deezer
+	.home-screen-cover
+		.container
+			.row
+				.home-screen-container
+					.col-md-12.col-lg-12.col-sm-12
+						.col-md-5.col-lg-5.col-sm-12.uboxie-description							
+							h2.h2.home-heading-medium.col-md-8.col-lg-8.col-sm-8 Your group.
+							h2.h2.home-heading-medium.col-md-10.col-lg-10.col-sm-10 Your music.
+							h1.h1.home-heading-large.col-md-12.col-lg-12.col-sm-12 Your Uboxie.
+						.col-md-6.col-lg-6.col-sm-12
+							.home-screen-msg							
+								p Connect with your Deezer account and enjoy music everywhere.
+								p.download-app Get Uboxie for Android on Google Play 
+								a.btn.btn-deezer(href="#{authLink}") Connect with
+									img(src="/img/deezer-logo-small.png" alt="Deezer")
+								a.btn.btn-gplay(href="https://play.google.com/store/apps/details?id=com.ingloriouscoders.uboxie" target="_blank")
+									img(alt="Uboxie app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png")

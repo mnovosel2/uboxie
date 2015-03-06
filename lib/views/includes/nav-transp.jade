@@ -1,9 +1,7 @@
 .nav-transp
-	.container
-		.add-group-ctn
-			a.btn.btn-primary(href='/groups/new')
-				.icon-preview
-					i.mdi-content-add-circle-outline.icon-group-add-btn
-						span New group
-		.search-group-ctn
-			input.form-control.floating-label#focusedInput(placeholder="Find group" type="text")
+	.search-group-ctn.col-lg-6.col-md-6
+		.input-group
+			input.form-control.custom-input(type='text', placeholder='Find group')
+			span.input-group-btn
+				button.btn.btn-default(type='button')
+					i.fa.fa-search

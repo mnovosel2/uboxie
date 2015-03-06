@@ -1,47 +1,63 @@
 extends ../default/layout
 block content
-	include ../includes/nav-transp
+	include ../includes/groups-header
 	.container
 		.row
-			.group.col-lg-12.col-lg-md-12
-				.group-menu
-					h4.list-header Groups
-					ul.list-group
-						li.list-group-item
-							a.active(href="#") All
-						li.list-group-item 
-							a(href="#") Latest
-						li.list-group-item
-							a(href="#") Your groups
-						li.list-group-item
-							a(href="#") Trending
-						li.list-group-item
-							a(href="#") Top rated
-				.col-lg-2.col-md-2
-				#group-container.groups-ctn.col-lg-10.col-md-10
-					each item in groups
-						.col-lg-5.col-md-5
-							div.item-in-group
-								.group-main-info
-									h4.group-name= item.name 
-								.group-image-ctn
-									img.img-responsive.group-image(src= item.currentSong.icon || "/img/default-icon.jpg" alt="Group cover image")
-									.image-overlay
-								.owner-info
-									.owner-basic
-										span.owner-desc Created by
-										span.owner-name= item.owner.name
-									.owner-avatar
-										img.img-responsive.img-circle(src="https://api.deezer.com/album/299519/image" alt="Avatar")
-								.group-info
-									.listeners-ctn
-										span.listeners 1 
-										span.listeners-desc listener(s)
-									.group-details-ctn
-										a.btn.btn-primary(href='group/'+ item._id) 
-											.icon-preview
-												i.mdi-av-play-circle-outline.icon-group-btn
-													span JOIN GROUP									
+			.col-lg-12.col-lg-md-12
+				.groups-wrapper
+					.groups-sidebar-wrapper
+						img.img-responsive.group-image(src="/img/uboxie-navbar.jpg" alt="Uboxie")				
+						ul.sidebar-nav.list-group
+							li.group-list-item.list-group-item.create-group
+								a(href="/groups/new")
+									i.fa.fa-plus 
+									| Create group					
+							li.group-list-item.list-group-item
+								a(href="#") 
+									i.fa.fa-align-justify
+									| All
+							li.group-list-item.list-group-item 
+								a(href="#") 
+									i.fa.fa-clock-o
+									| Latest
+							li.group-list-item.list-group-item
+								a(href="#") 
+									i.fa.fa-bookmark
+									| Your groups
+							li.group-list-item.list-group-item
+								a(href="#") 
+									i.fa.fa-fire
+									| Trending
+							li.group-list-item.list-group-item
+								a(href="#") 
+									i.fa.fa-star
+									| Top rated
+					.groups-page-content-wrapper
+						.container-fluid
+							.row
+								include ../includes/nav-transp
+								.col-lg-12.col-md-12
+									each item in groups
+										div.item-in-group.col-lg-4.col-md-4						
+											.group-info-ctn
+												.group-info
+													.group-cover
+														img.img-responsive.group-image(src= item.currentSong.icon || "/img/default-icon.jpg" alt="Group cover image")
+													.group-desc
+														.group-title
+															h4.group-name= item.name 
+														.owner-info
+															.owner-basic
+																span.owner-desc Owner:
+																br
+																span.owner-name= item.owner.name
+															.listeners-ctn
+																span.listeners 2 
+																span.listeners-desc listeners					
+												.join-group
+													a.btn.btn-join-group(href='group/'+ item._id) 							
+														i.fa.fa-music
+														span.join-group-text Join group								
 block custom-scripts
 	script.
 		$(function(){

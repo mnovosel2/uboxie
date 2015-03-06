@@ -3,15 +3,17 @@ block content
 	div.container
 		div.group-container(data-group= groupId).col-lg-12.col-md-12
 			.row
-				.search-container.col-xs-5.col-md-5.col-lg-5
-					form(action='', method='POST', role='form', id="searchTrackForm")
-						.form-group
-							input.form-control(type='text', placeholder='Type song or artist', id="query")
-					#result-list
+				.music-manager
+					.search-container.col-xs-7.col-md-7.col-lg-7
+						form(action='', method='POST', role='form', id="searchTrackForm")
+							.form-group
+								input.form-control(type='text', placeholder='Type song or artist', id="query")
+						.results-wrapper
+							#result-list
+					.group-music-list.col-md-7.col-lg-7
+						#group-queue.list-group.default-skin
 				#playback
 				#dz-root
-				.col-md-1.col-lg-1
-				#group-queue.list-group.col-md-12.col-lg-12.default-skin
 	include ../includes/player
 block custom-scripts
 	script.

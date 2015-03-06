@@ -1,0 +1,435 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import 'base';
+.max-width-height {
+    width: 100%;
+    height: 100%;
+}
+.home-screen-container {
+    position: absolute;
+    bottom: 16%;
+    @include clearfix;
+}
+.home-heading {
+    @extend .heading;
+    background: #3f51b5;
+    padding: 10px 10px 5px 24px;
+    margin-bottom: 10px;
+    color: white;
+}
+.home-heading-medium {
+    @extend .home-heading;
+    @include respond-to(small-screens) {
+        font-size: 20px;
+    };
+    @include respond-to(small-medium-screens) {
+        font-size: 30px;
+    };
+    @include respond-to(medium-screens) {
+        font-size: 32px;
+    };
+    @include respond-to(wide-screens) {
+        font-size: 48px;
+    };
+}
+.home-heading-large {
+    @extend .home-heading;
+    @include respond-to(small-screens) {
+        font-size: 28px;
+    };
+    @include respond-to(small-medium-screens) {
+        font-size: 40px;
+    };
+    @include respond-to(medium-screens) {
+        font-size: 44px;
+    };
+    @include respond-to(wide-screens) {
+        font-size: 68px;
+    };
+    font-weight: bolder;
+}
+.home-screen-cover {
+    background: image-url('uboxie-homepage.jpg', false, false) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    @extend .max-width-height;
+}
+.home-screen-msg {
+    @include clearfix;
+    font-family: $default-font-family;
+    font-size: 18px;
+    @include respond-to(small-screens) {
+        font-size: 14px;
+    };
+    @include respond-to(small-medium-screens) {
+        font-size: 14px;
+        height: 184px;
+    };
+    @include respond-to(medium-screens) {
+        font-size: 16px;
+        height: 196px;
+    };
+    @include respond-to(wide-screens) {
+        font-size: 18px;
+        height: 226px;
+    };
+    line-height: 1.2em;
+    background: white;
+
+    padding: 20px;
+    opacity: .9;
+    p {
+	    @include respond-to(small-screens) {
+	        width: 90%;
+	    };
+	    @include respond-to(small-medium-screens) {
+	        width: 90%;
+	    };
+	    @include respond-to(medium-screens) {
+	        width: 80%;
+	    };
+	    @include respond-to(wide-screens) {
+	        width: 69%;
+	    };        
+        line-height: 1.5em;
+        text-transform: uppercase;
+    }
+    .download-app {
+        margin-top: 5px;
+        color: #828282;
+        font-size: 16px;
+        @include respond-to(small-screens) {
+	        width: 60%;
+	        font-size: 12px;
+	    };
+	    @include respond-to(small-medium-screens) {
+	        width: 65%;
+	        font-size: 14px;
+	    };
+	    @include respond-to(medium-screens) {
+	        width: 60%;
+	        font-size: 14px;
+	    };
+	    @include respond-to(wide-screens) {
+	        width: 44%;
+	        font-size: 16px;
+	    };        
+    }
+}
+.groups-wrapper {
+  padding-left: 152px;
+  transition: all 0.4s ease 0s;
+  .groups-sidebar-wrapper {
+      a{
+        display:block;
+        width: 100%;
+      }
+      a:hover{
+        text-decoration: none;
+      }
+      .list-group-item{
+        padding: 0px 0px;
+        a{
+            padding:9px 3px;
+        }
+      }
+	  margin-left: -202px;
+	  left: 202px;
+	  width: 202px;
+	  background: #f7f7f7;
+	  position: fixed;
+	  height: 100%;
+	  overflow-y: auto;
+	  z-index: 1000;
+	  transition: all 0.4s ease 0s;
+	  border-right:1px solid #cdcdcd;
+      .create-group{
+        background: #ee4b35;
+        padding-bottom: 8px;
+        border:1px solid #ee4b35 !important;
+        border-radius:0 !important;
+        a,.fa-plus{
+            color:white;
+        }
+      }
+      .fa{
+            padding-right:8px;
+        }
+      .create-group:hover{
+         background: #ee4b35;
+      }
+	}
+
+	.groups-page-content-wrapper {
+	  width: 100%;
+      position: relative;
+      top:105px;
+	}
+
+	.sidebar-nav {
+	  position: absolute;
+	  top: 71px;
+	  width: 201px;
+	  list-style: none;
+	  margin: 0;
+
+	}
+	.group-list-item{
+		a{
+			color:#595959;
+			font-family: $default-font-family;
+			font-size:16px;
+			line-height: 1.5em;
+		}
+	}
+    .list-group-item{
+        background:transparent;
+         padding-left:24px !important;
+    }
+    .list-group-item:hover{
+        background:#e9e9e9;
+    }
+}
+
+.group-info-ctn{
+    overflow: hidden;
+    margin-top:25px;
+    font-family: $default-font-family;
+    line-height: 1.5em;
+    height:154px;
+    width: 100%;
+    @include box-shadow(#d5d5d5 2px 2px 14px);
+    .group-cover{
+        float:left;
+    }
+    .group-desc{
+        margin:14px 0 0 15px;
+        float:left;
+        .owner-basic{
+            margin-bottom: 4px;
+        }
+        .owner-info{
+            font-size:14px;
+            line-height: 1.4em;
+            margin-top: 10px;
+            color:#868686;
+        }
+        .owner-name{
+            display: inline-block;
+            color:#5f5f5f;
+        }
+        .group-title{
+            h4{
+               color:#272727;
+               font-size: 20px;   
+            }
+            h4:first-letter{
+                 text-transform: uppercase !important;
+            }
+        }
+        .listeners-ctn{
+            span{
+                color:#aaaaaa;
+            }
+        }
+    }
+}
+.groups-header{
+    height:71px;
+    background:white;
+    border-bottom:1px solid #e3e3e3;
+    position: absolute;
+    padding:12px 40px;
+    top:0;
+    width:100%;
+    @include box-shadow(#ebebeb 0px 2px 22px);
+    .profile-info{
+        float:right;
+        font-family: $default-font-family;
+        display: inline-block;
+        .fa-user{
+            color:#3e5397 !important;
+        }
+        .username{
+            display: inline-block;
+            margin-left:8px;
+            color:#959595;
+            z-index: 199;
+            position: relative;
+        }
+        .username:hover{
+            color:#636363;
+        }
+    }
+}
+.search-group-ctn{
+    margin-bottom: 15px;
+}
+.custom-input{
+    font-family: $default-font-family;
+    display:block;
+}
+.custom-input:focus{
+    box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(104, 109, 153, 0.6);
+}
+.group-container{
+    margin-top:30px;
+    .group-music-list{
+        float:left;
+        position: relative;
+        top:55px;
+        padding:0 !important;
+        .queue-item{
+            font-family:$default-font-family;
+
+        }
+    }
+
+    .group-music-list{
+        padding-left:0 !important;
+    }
+    .search-container{
+        height:55px;
+        position: absolute;
+        background: #939393;
+        padding:10px 0 10px 10px !important;
+        #searchTrackForm{
+            width:50%;
+        }
+        #query{
+            background: transparent;
+            font-family: $default-font-family;
+            color:white;
+            border:1px solid transparent;
+            border-bottom:2px solid white;
+            border-radius:0;
+             padding:3px !important;
+        }
+        #query:focus{
+            box-shadow:0px 0px 0px !important;
+
+        }
+        .form-control::-moz-placeholder{
+            color:white !important;
+        }
+        .results-wrapper{     
+            width:50%;
+            position: relative;
+            top:-4px;
+            .slimScrollDiv{
+                 z-index: 199 !important;
+            }
+            #result-list{
+                padding:0 !important;
+                margin:0 !important;
+                width:50%;
+                border-left:1px solid #ebebeb;
+                border-right:1px solid #ebebeb;
+                border-bottom:1px solid #ebebeb;
+                background:rgba(251,251,251,.8);
+                padding:5px;
+                display:none;
+                .album-icon {
+                    max-width: 50px;
+                    margin-left: 10px;;
+                }
+                .result-item-ctn {
+                    min-height: 70px !important;
+                    border-bottom: 1px solid #D8D8D8;
+                    padding-top: 6px;
+                    opacity:1;
+                }
+                .result-item-ctn:hover {
+                  background-color: #e0552f;
+                  opacity:1;
+                }
+                .result-item-ctn:hover a{
+                    h5{
+                       color:white; 
+                    }
+                    p{
+                        color:white;
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+.player-container {
+    width: 100%;
+    height: 100px;
+    background: #3d478e;
+  
+-webkit-box-shadow: inset 0px -42px 19px -24px rgba(0,0,0,0.37);
+-moz-box-shadow: inset 0px -42px 19px -24px rgba(0,0,0,0.37);
+box-shadow: inset 0px -42px 19px -24px rgba(0,0,0,0.37);
+    position: absolute;
+    bottom: 0;
+    margin: 0 !important;
+}
+.progress-bar-ctn {
+    position: relative;
+    top: 45px;
+    width: 40%;
+    left: 30%;
+}
+.player-song-start, .player-song-end {
+    color: #fbfbfb;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-family: $default-font-family;
+}
+.player-song-end {
+    float: right;
+}
+.progress.player-progress {
+    height: 2px !important;
+    width: 100%;
+    background: #a0a0a0 !important;
+}
+.progress-bar.player-progress-bar {
+    background-color: #fbfbfb !important;
+}
+#group-queue{
+    .track-name{
+        margin-bottom:10px;
+        color:#3a3a3a;
+    }
+    .track-artist{
+        color:#868686;
+    }
+   .active{
+        background: #251d72 !important;
+        border:1px solid #3D478E !important;
+        p{
+            font-family: $default-font-family;
+            color:white;            
+        }
+
+    }
+}
+
+
+.song-title {
+    font-size: 14px;
+    font-family: $default-font-family;
+    color:#3a3a3a;
+    margin-bottom: 9px;
+}
+.song-info {
+    font-size: 12px;
+     font-family: $default-font-family;
+     color:#505050;
+}
+.track-artist{
+    font-size: 14px;
+}
+.track-name{
+    color:#9E9E9E;
+}

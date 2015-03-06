@@ -6,9 +6,8 @@ Uboxie.StreamApiModule = (function() {
 			});
 		},
 		createSearchResultList: function(data, container, options) {
-			var contentToDisplay = '<div id="search-result-container" class="col-md-12">';
-			contentToDisplay += '<div class="col-md-12">';
-			contentToDisplay += '<div class="result-list search-result-list row">';
+			var contentToDisplay = '<div id="search-result-container">';
+			contentToDisplay += '<div class="result-list search-result-list">';
 			$(data).each(function(index, element) {
 				if(element[options.trackDuration]>0){
 					contentToDisplay += '<div class="row result-item-ctn">';
