@@ -36,9 +36,9 @@ block content
 						.container-fluid
 							.row
 								include ../includes/nav-transp
-								.col-lg-12.col-md-12
+								.col-lg-12.col-md-12#group-container
 									each item in groups
-										div.item-in-group.col-lg-4.col-md-4						
+										div(data-id="#{item._id}").item-in-group.col-lg-4.col-md-4						
 											.group-info-ctn
 												.group-info
 													.group-cover
@@ -61,7 +61,6 @@ block content
 block custom-scripts
 	script.
 		$(function(){
-
 			socket.on('newGroup', function(data){
 				if(typeof data == "string"){
 					data=JSON.parse(data);
@@ -71,22 +70,26 @@ block custom-scripts
 
 				if(data.currentSong)
 					imageUri = data.currentSong.icon || "/img/default-icon.jpg";
-
-				var toAppend ='<div class="col-lg-5 col-md-5"><div class="item-in-group"><div class="group-main-info"><h4 class="group-name">'
-				+ data.name + '</h4></div><div class="group-image-ctn"><img src="' + imageUri + '" alt="Group cover image" class="img-responsive group-image">'
-				+ '<div class="image-overlay"></div></div><div class="owner-info"><div class="owner-basic"><span class="owner-desc">Created by</span><span class="owner-name">'+data.owner.name+'</span>'
-				+ '</div><div class="owner-avatar"><img src="https://api.deezer.com/album/299519/image" alt="Avatar" class="img-responsive img-circle"></div></div><div class="group-info">'
-				+ '<div class="listeners-ctn"><span class="listeners">1 </span><span class="listeners-desc">listener(s)</span></div><div class="group-details-ctn">'
-				+ '<a href="group/'+ data._id +'" class="btn btn-primary"> <div class="icon-preview"><i class="mdi-av-play-circle-outline icon-group-btn"><span>JOIN GROUP</span>'
-				+ '</i></div></a></div></div></div></div>';
-
+				var toAppend='<div class="item-in-group col-lg-4 col-md-4" data-id="'+data._id+'"><div class="group-info-ctn">'
+				+'<div class="group-info"><div class="group-cover"><img src="' + imageUri + '" alt="Group cover image" class="img-responsive group-image"></div>'
+				+'<div class="group-desc"><div class="group-title"><h4 class="group-name">'+ data.name +'</h4></div>'
+				+'<div class="owner-info"><div class="owner-basic"><span class="owner-desc">Owner:<br>'
+				+'<span class="owner-name">'+data.owner.name+'</span></div>'
+				+'<div class="listeners-ctn"><span class="listeners">2</span><span class="listeners-desc">listeners</span></div>'
+				+'</div></div><div class="join-group">'
+				+'<a class="btn btn-join-group" href="group/'+data._id+'"><i class="fa fa-music"></i><span class="join-group-text">Join group</span></div></div></div>';
+				console.log(toAppend);
 				var container = $('#group-container');
 
 				if(container.length > 0)
 					$('#group-container').append(toAppend);
 				else
-					$('#group-container').append('<div class="col-lg-5 col-md-5">' + toAppend + '</div>');
+					$('#group-container').append(toAppend);
 
+			});
+
+			socket.on('removeGroup', function(data){
+				$('div[data-id="'+data.id+'"]').remove();
 			});
 
 			//var $container = $('.group-container');

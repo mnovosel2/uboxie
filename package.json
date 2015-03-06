@@ -19,10 +19,13 @@
     "nodemon": "~1.2.1"
   },
   "dependencies": {
-    "passport-http-bearer": "^1.0.1",
-    "moment": "~2.8.4",
     "async": "~0.9.0",
     "express-session": "~1.9.3",
-    "socket.io": "~1.2.1"
+    "moment": "~2.8.4",
+    "mongoose": "^3.8.24",
+    "passport-http-bearer": "^1.0.1",
+    "socket.io": "~1.2.1",
+    "underscore": "^1.8.2",
+    "underscore.object.plus": "^1.0.0"
   }
 }
